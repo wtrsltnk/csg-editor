@@ -27,10 +27,13 @@ public:
 	virtual void onMouseMove(int x, int y);
 	virtual void render(int time);
 
-	void renderBrush(geo::Brush* brush);
-	
+	void renderBrush(geo::Brush* brush, float lineColor[3]);
+	void renderBoundingBox(const float mins[], const float maxs[], float color[]);
+	geo::Brush* selectBrush(int mousex, int mousey);
+
 private:
 	geo::Scene mScene;
+	geo::Brush* mSelectedBrush;
 	Camera mCamera;
 
 };
