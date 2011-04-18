@@ -81,43 +81,39 @@ void MapViewer::render(int time)
 
 	this->mCamera.update();
 
-	float lineColor[] = { 1, 1, 1 };
-	float red[] = { 1, 0, 0 };
+	float lineColor[] = { -1, 1, 1, 1.0f };
+	float red[] = { 1, 0, 0, 1.0f };
+	float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
 	{
 		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
-		{
-			glLineWidth(1);
-			if (this->mSelectedBrush == (*b))
-			{
-			glLineWidth(2);
-				this->renderBrush(*b, red);
-			}
-			else
-			{
-				this->renderBrush(*b, lineColor);
-			}
-		}
+			this->renderBrush(*b, lineColor);
 	}
-//	selectBrush(0, 0);
+	if (this->mSelectedBrush != 0)
+	{
+		glDisable(GL_DEPTH_TEST);
+		glColor3f(1, 1, 1);
+		glLineWidth(2);
+		this->renderBoundingBox(this->mSelectedBrush->mMins, this->mSelectedBrush->mMaxs, white);
+	}
 }
 
-void MapViewer::renderBrush(geo::Brush* brush, float lineColor[3])
+void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	if (lineColor[0] > 0)
-		glColor3f(lineColor[0], lineColor[1], lineColor[2]);
-	else
-		glColor3fv(brush->mColor);
-	for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
 	{
-		glBegin(GL_POLYGON);
-		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
-			glVertex3fv(brush->mVertices[(*itr)]);
-		glEnd();
+		glColor3f(lineColor[0], lineColor[1], lineColor[2]);
+		for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
+		{
+			glBegin(GL_POLYGON);
+			for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
+				glVertex3fv(brush->mVertices[(*itr)]);
+			glEnd();
+		}
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -143,8 +139,9 @@ void MapViewer::renderBoundingBox(const float mins[], const float maxs[], float 
 	glDisable(GL_TEXTURE_2D);
 	glActiveTextureARB(GL_TEXTURE0_ARB);
 	glDisable(GL_TEXTURE_2D);
-	glColor3f(color[0], color[1], color[2]);
-	glLineWidth(1.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(color[0], color[1], color[2], color[3]);
 
 	glBegin(GL_LINES);
 	// bottom
