@@ -17,19 +17,20 @@ RANLIB=ranlib
 CC=gcc
 CCC=g++
 CXX=g++
-FC=
+FC=gfortran
 AS=as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
 CND_CONF=Release
 CND_DISTDIR=dist
+CND_BUILDDIR=build
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
+OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
@@ -54,12 +55,12 @@ LDLIBSOPTIONS=../GuiProject/dist/libRelease/GNU-Linux-x86/libguiproject.a -lGLU 
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-Release.mk dist/Release/GNU-Linux-x86/mapviewer
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer
 
-dist/Release/GNU-Linux-x86/mapviewer: ../GuiProject/dist/libRelease/GNU-Linux-x86/libguiproject.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../GuiProject/dist/libRelease/GNU-Linux-x86/libguiproject.a
 
-dist/Release/GNU-Linux-x86/mapviewer: ${OBJECTFILES}
-	${MKDIR} -p dist/Release/GNU-Linux-x86
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ${OBJECTFILES}
+	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/MapViewer.o: MapViewer.cpp 
@@ -73,8 +74,8 @@ ${OBJECTDIR}/MapViewer.o: MapViewer.cpp
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
-	${RM} -r build/Release
-	${RM} dist/Release/GNU-Linux-x86/mapviewer
+	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer
 
 # Subprojects
 .clean-subprojects:

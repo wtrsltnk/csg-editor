@@ -12,6 +12,7 @@
 #include <geo/MapLoader.h>
 #include <stdio.h>
 #include <GL/freeglut_std.h>
+#include <c++/4.4/bits/stl_bvector.h>
 
 #define PI 3.14159265
 #define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
@@ -22,7 +23,7 @@ GLUquadricObj* quad = 0;
 GlutApplication* gApplication = new MapViewer();
 
 MapViewer::MapViewer()
-	: GlutApplication("Map Viewer"), mSelectedBrush(0), mMode(0)
+	: GlutApplication("Map Viewer"), mSelectedBrush(0), mSelectedPlane(0), mMode(0), mDragging(false)
 {
 }
 
@@ -95,6 +96,16 @@ void MapViewer::render(int time)
 	if (this->mSelectedBrush != 0)
 	{
 		glDisable(GL_DEPTH_TEST);
+		if (this->mSelectedPlane != 0)
+		{
+//			glEnable(GL_BLEND);
+			glColor4f(0, 0, 1, 0.5f);
+			glBegin(GL_POLYGON);
+			for(std::vector<int>::iterator itr = this->mSelectedPlane->mIndices.begin(); itr != this->mSelectedPlane->mIndices.end(); ++itr)
+				glVertex3fv(this->mSelectedBrush->mVertices[(*itr)]);
+			glEnd();
+//			glDisable(GL_BLEND);
+		}
 		glColor3f(1, 1, 1);
 		glLineWidth(2);
 		this->renderBoundingBox(this->mSelectedBrush->mMins, this->mSelectedBrush->mMaxs, white);
@@ -234,6 +245,75 @@ geo::Brush* MapViewer::selectBrush(int mousex, int mousey)
 			}
 		}
 	}
+	return 0;
+}
+
+geo::Plane* MapViewer::selectPlane(geo::Brush* brush, int mousex, int mousey)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_BUFFER);
+
+	glLoadIdentity();
+
+	this->mCamera.update();
+
+	int index = 1;
+	for (std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
+	{
+		glColor3f(index/255.0f, 0, 0);
+		glBegin(GL_POLYGON);
+		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
+			glVertex3fv(brush->mVertices[(*itr)]);
+		glEnd();
+		index++;
+	}
+	
+	GLubyte pixel[3];
+	glReadBuffer(GL_BACK);
+	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
+
+	if (pixel[0] > 0)
+		return &brush->mPlanes[pixel[0]-1];
+	
+	return 0;
+}
+
+bool MapViewer::selectHandle(int mousex, int mousey)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_BUFFER);
+
+	glLoadIdentity();
+
+	this->mCamera.update();
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glPushMatrix();
+	glTranslatef(this->mSelectionOrigin.x(), this->mSelectionOrigin.y(), this->mSelectionOrigin.z());
+	glScalef(10.0f, 10.0f, 10.0f);
+	if (this->mMode == EditMode::Scale)
+		glutSolidSphere(1, 8, 8);
+	else if (this->mMode == EditMode::Move)
+		glutSolidCube(1);
+	else if (this->mMode == EditMode::Rotate)
+		glutSolidTetrahedron();
+	glPopMatrix();
+	
+	GLubyte pixel[3];
+	glReadBuffer(GL_BACK);
+	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
+
+	if (pixel[0] == 255)
+		return true;
+	return false;
 }
 
 void MapViewer::onKeyDown(Key::Code key)
@@ -290,26 +370,84 @@ void MapViewer::onMouseButtonDown(Mouse::Button button)
 {
 	if (button == Mouse::Left)
 	{
-		// Select Brush here
-		geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-		if (b != 0)
+		if (this->mSelectedBrush != 0)
 		{
-			this->mSelectedBrush = b;
-			this->mSelectionOrigin = Vector3(
-					this->mSelectedBrush->mMins[0] + ((this->mSelectedBrush->mMaxs[0]-this->mSelectedBrush->mMins[0]) / 2),
-					this->mSelectedBrush->mMins[1] + ((this->mSelectedBrush->mMaxs[1]-this->mSelectedBrush->mMins[1]) / 2),
-					this->mSelectedBrush->mMins[2] + ((this->mSelectedBrush->mMaxs[2]-this->mSelectedBrush->mMins[2]) / 2)
-				);
+			if (this->mSelectedPlane == 0)
+			{
+				if (this->selectHandle(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY()))
+				{
+					startx = MouseState::currentState().getMousePositionX();
+					starty = MouseState::currentState().getMousePositionY();
+					this->mDragging = true;
+					return;
+				}
+			}
+			geo::Plane* plane = this->selectPlane(this->mSelectedBrush, MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+			if (plane == 0)
+			{
+				// Select Brush here
+				geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+				if (b != 0)
+				{
+					this->mSelectedBrush = b;
+					this->mSelectionOrigin = this->mSelectedBrush->origin();
+				}
+			}
+			else
+			{
+				if (this->mSelectedPlane == plane)
+				{
+					this->mSelectedPlane = 0;
+					this->mSelectionOrigin = this->mSelectedBrush->origin();
+				}
+				else
+				{
+				this->mSelectedPlane = plane;
+				this->mSelectionOrigin = plane->average;
+				}
+			}
 		}
-		
+		else
+		{
+			// Select Brush here
+			geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+			if (b != 0)
+			{
+				this->mSelectedBrush = b;
+				this->mSelectionOrigin = this->mSelectedBrush->origin();
+			}
+		}
 	}
+}
+
+void MapViewer::onMouseButtonUp(Mouse::Button button)
+{
+	this->mDragging = false;
 }
 
 void MapViewer::onMouseMove(int x, int y)
 {
 	if (MouseState::currentState().isButtonPressed(Mouse::Middle))
 		this->mCamera.rotate(Deg2Rad((starty-y)/10.0f), 0, Deg2Rad((x-startx)/10.0f));
-
+	else if (MouseState::currentState().isButtonPressed(Mouse::Left))
+	{
+		if (this->mDragging && this->mSelectedBrush != 0)
+		{
+			if (this->mSelectedPlane != 0)
+			{
+				// dragg plane
+			}
+			else
+			{
+				// dragg brush
+				Vector3 left = this->mCamera.left().unit() * (x-startx);
+				Vector3 up = this->mCamera.up().unit() * (y-starty);
+				this->mSelectedBrush->move(left.x(), left.y(), left.z());
+				this->mSelectedBrush->move(up.x(), up.y(), up.z());
+				this->mSelectionOrigin = this->mSelectedBrush->origin();
+			}
+		}
+	}
 	startx = x;
 	starty = y;
 }
