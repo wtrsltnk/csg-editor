@@ -12,6 +12,17 @@
 #include <common/camera.h>
 #include <geo/Scene.h>
 
+namespace EditMode
+{
+	enum Modes
+	{
+		None = 0,
+		Move,
+		Scale,
+		Rotate
+	};
+}
+
 class MapViewer : public GlutApplication
 {
 public:
@@ -34,6 +45,8 @@ public:
 private:
 	geo::Scene mScene;
 	geo::Brush* mSelectedBrush;
+	Vector3 mSelectionOrigin;
+	int mMode;
 	Camera mCamera;
 
 };

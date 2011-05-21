@@ -11,16 +11,18 @@
 #include <GL/glu.h>
 #include <geo/MapLoader.h>
 #include <stdio.h>
+#include <GL/freeglut_std.h>
 
 #define PI 3.14159265
 #define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
 
 int startx = 0, starty = 0;
+GLUquadricObj* quad = 0;
 
 GlutApplication* gApplication = new MapViewer();
 
 MapViewer::MapViewer()
-	: GlutApplication("Map Viewer"), mSelectedBrush(0)
+	: GlutApplication("Map Viewer"), mSelectedBrush(0), mMode(0)
 {
 }
 
@@ -42,6 +44,7 @@ bool MapViewer::initialize(int argc, char* argv[])
 	}
 
 	this->mCamera.rotateX(Deg2Rad(-90));
+	quad = gluNewQuadric();
 	return true;
 }
 
@@ -70,13 +73,13 @@ void MapViewer::render(int time)
 	float speed = 5.0f * ((time - lastTime) / 10.0f);
 	lastTime = time;
 
-	if (KeyboardState::currentState().isKeyPressed(Key::w))
+	if (KeyboardState::currentState().isKeyPressed(Key::Up))
 		this->mCamera.moveForward(speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::s))
+	if (KeyboardState::currentState().isKeyPressed(Key::Down))
 		this->mCamera.moveForward(-speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::a))
+	if (KeyboardState::currentState().isKeyPressed(Key::Left))
 		this->mCamera.moveLeft(speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::d))
+	if (KeyboardState::currentState().isKeyPressed(Key::Right))
 		this->mCamera.moveLeft(-speed);
 
 	this->mCamera.update();
@@ -95,6 +98,16 @@ void MapViewer::render(int time)
 		glColor3f(1, 1, 1);
 		glLineWidth(2);
 		this->renderBoundingBox(this->mSelectedBrush->mMins, this->mSelectedBrush->mMaxs, white);
+		glPushMatrix();
+		glTranslatef(this->mSelectionOrigin.x(), this->mSelectionOrigin.y(), this->mSelectionOrigin.z());
+		glScalef(10.0f, 10.0f, 10.0f);
+		if (this->mMode == EditMode::Scale)
+			glutWireSphere(1, 8, 8);
+		else if (this->mMode == EditMode::Move)
+			glutWireCube(1);
+		else if (this->mMode == EditMode::Rotate)
+			glutWireTetrahedron();
+		glPopMatrix();
 	}
 }
 
@@ -211,14 +224,12 @@ geo::Brush* MapViewer::selectBrush(int mousex, int mousey)
 	glReadBuffer(GL_BACK);
 	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
 
-	printf("%d %d %d\n", pixel[0], pixel[1], pixel[2]);
 	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
 	{
 		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
 		{
 			if ((*b)->mColor[0] == pixel[0]/255.0f && (*b)->mColor[1] == pixel[1]/255.0f && (*b)->mColor[2] == pixel[2]/255.0f)
 			{
-				printf("Foundit!\n");
 				return (*b);
 			}
 		}
@@ -231,6 +242,48 @@ void MapViewer::onKeyDown(Key::Code key)
 	{
 		this->quit();
 	}
+	else if (key == Key::g || key == Key::G)
+	{
+		this->mMode = EditMode::Move;
+	}
+	else if (key == Key::s || key == Key::S)
+	{
+		this->mMode = EditMode::Scale;
+	}
+	else if (key == Key::r || key == Key::R)
+	{
+		this->mMode = EditMode::Rotate;
+	}
+	else if (key == Key::x)
+	{
+		if (this->mSelectedBrush != 0)
+			this->mSelectedBrush->move(10, 0, 0);
+	}
+	else if (key == Key::c)
+	{
+		if (this->mSelectedBrush != 0)
+			this->mSelectedBrush->move(-10, 0, 0);
+	}
+	else if (key == Key::v)
+	{
+		if (this->mSelectedBrush != 0)
+			this->mSelectedBrush->scale(1.5f, 1, 1, this->mSelectionOrigin);
+	}
+	else if (key == Key::b)
+	{
+		if (this->mSelectedBrush != 0)
+			this->mSelectedBrush->scale(0.75f, 1, 1, this->mSelectionOrigin);
+	}
+	else if (key == Key::n)
+	{
+		if (this->mSelectedBrush != 0)
+			this->mSelectedBrush->rotate(0.75f, 0, 0, this->mSelectionOrigin);
+	}
+	else if (key == Key::m)
+	{
+		if (this->mSelectedBrush != 0)
+			this->mSelectedBrush->rotate(-0.75f, 0, 0, this->mSelectionOrigin);
+	}
 }
 
 void MapViewer::onMouseButtonDown(Mouse::Button button)
@@ -240,7 +293,14 @@ void MapViewer::onMouseButtonDown(Mouse::Button button)
 		// Select Brush here
 		geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
 		if (b != 0)
+		{
 			this->mSelectedBrush = b;
+			this->mSelectionOrigin = Vector3(
+					this->mSelectedBrush->mMins[0] + ((this->mSelectedBrush->mMaxs[0]-this->mSelectedBrush->mMins[0]) / 2),
+					this->mSelectedBrush->mMins[1] + ((this->mSelectedBrush->mMaxs[1]-this->mSelectedBrush->mMins[1]) / 2),
+					this->mSelectedBrush->mMins[2] + ((this->mSelectedBrush->mMaxs[2]-this->mSelectedBrush->mMins[2]) / 2)
+				);
+		}
 		
 	}
 }
