@@ -43,6 +43,7 @@ public:
 	geo::Brush* selectBrush(int mousex, int mousey);
 	geo::Plane* selectPlane(geo::Brush* brush, int mousex, int mousey);
 	bool selectHandle(int mousex, int mousey);
+	bool testMenu(int mousex, int mousey);
 
 private:
 	geo::Scene mScene;

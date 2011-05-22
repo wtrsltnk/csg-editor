@@ -74,15 +74,16 @@ void MapViewer::render(int time)
 	float speed = 5.0f * ((time - lastTime) / 10.0f);
 	lastTime = time;
 
-	if (KeyboardState::currentState().isKeyPressed(Key::Up))
+	if (KeyboardState::currentState().isKeyPressed(Key::w))
 		this->mCamera.moveForward(speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::Down))
+	if (KeyboardState::currentState().isKeyPressed(Key::s))
 		this->mCamera.moveForward(-speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::Left))
+	if (KeyboardState::currentState().isKeyPressed(Key::a))
 		this->mCamera.moveLeft(speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::Right))
+	if (KeyboardState::currentState().isKeyPressed(Key::d))
 		this->mCamera.moveLeft(-speed);
 
+	glPushMatrix();
 	this->mCamera.update();
 
 	float lineColor[] = { -1, 1, 1, 1.0f };
@@ -120,6 +121,25 @@ void MapViewer::render(int time)
 			glutWireTetrahedron();
 		glPopMatrix();
 	}
+	glPopMatrix();
+	
+	glViewport(0, 0, width/5, height/5);
+	glDisable(GL_DEPTH_TEST);
+	
+	glTranslatef(-2, 0, -7);
+	glRotatef(90, 1, 0, 0);
+	glColor3f(1, 0, 0);
+	glutWireSphere(1, 8, 8);
+	
+	glTranslatef(2, 0, 0);
+	glColor3f(0, 1, 0);
+	glutWireCube(1.2);
+	
+	glTranslatef(2, 0, 0);
+	glColor3f(0, 0, 1.0f);
+	glutWireTetrahedron();
+	
+	glViewport(0, 0, width, height);
 }
 
 void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
@@ -154,58 +174,6 @@ void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 	glBegin(GL_POINTS);
 	for(std::vector<Vector3>::iterator itr = brush->mVertices.begin(); itr != brush->mVertices.end(); ++itr)
 		glVertex3fv((*itr));
-	glEnd();
-}
-
-void MapViewer::renderBoundingBox(const float mins[], const float maxs[], float color[])
-{
-	glActiveTextureARB(GL_TEXTURE1);
-	glDisable(GL_TEXTURE_2D);
-	glActiveTextureARB(GL_TEXTURE0_ARB);
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(color[0], color[1], color[2], color[3]);
-
-	glBegin(GL_LINES);
-	// bottom
-	glVertex3f(mins[0], mins[1], mins[2]);
-	glVertex3f(maxs[0], mins[1], mins[2]);
-
-	glVertex3f(maxs[0], mins[1], mins[2]);
-	glVertex3f(maxs[0], maxs[1], mins[2]);
-
-	glVertex3f(maxs[0], maxs[1], mins[2]);
-	glVertex3f(mins[0], maxs[1], mins[2]);
-
-	glVertex3f(mins[0], maxs[1], mins[2]);
-	glVertex3f(mins[0], mins[1], mins[2]);
-
-	// top
-	glVertex3f(mins[0], maxs[1], maxs[2]);
-	glVertex3f(maxs[0], maxs[1], maxs[2]);
-
-	glVertex3f(maxs[0], maxs[1], maxs[2]);
-	glVertex3f(maxs[0], mins[1], maxs[2]);
-
-	glVertex3f(maxs[0], mins[1], maxs[2]);
-	glVertex3f(mins[0], mins[1], maxs[2]);
-
-	glVertex3f(mins[0], mins[1], maxs[2]);
-	glVertex3f(mins[0], maxs[1], maxs[2]);
-
-	//sides
-	glVertex3f(mins[0], maxs[1], mins[2]);
-	glVertex3f(mins[0], maxs[1], maxs[2]);
-
-	glVertex3f(maxs[0], maxs[1], mins[2]);
-	glVertex3f(maxs[0], maxs[1], maxs[2]);
-
-	glVertex3f(maxs[0], mins[1], mins[2]);
-	glVertex3f(maxs[0], mins[1], maxs[2]);
-
-	glVertex3f(mins[0], mins[1], mins[2]);
-	glVertex3f(mins[0], mins[1], maxs[2]);
 	glEnd();
 }
 
@@ -316,53 +284,54 @@ bool MapViewer::selectHandle(int mousex, int mousey)
 	return false;
 }
 
+bool MapViewer::testMenu(int mousex, int mousey)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_BUFFER);
+
+	glLoadIdentity();
+
+	glViewport(0, 0, width/5, height/5);
+	glDisable(GL_DEPTH_TEST);
+	glTranslatef(-2, 0, -7);
+	glRotatef(90, 1, 0, 0);
+	glColor3f(1, 0, 0);
+	glutSolidSphere(1, 8, 8);
+	glTranslatef(2, 0, 0);
+	glColor3f(0, 1, 0);
+	glutSolidCube(1.2);
+	glTranslatef(2, 0, 0);
+	glColor3f(0, 0, 1.0f);
+	glutSolidTetrahedron();
+	
+	GLubyte pixel[3];
+	glReadBuffer(GL_BACK);
+	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
+
+	glViewport(0, 0, width, height);
+	
+	if (pixel[0] == 0 && pixel[1] == 0 && pixel[2] == 0)
+		return false;
+	
+	if (pixel[0] == 255)
+		this->mMode = EditMode::Scale;
+	if (pixel[1] == 255)
+		this->mMode = EditMode::Move;
+	if (pixel[2] == 255)
+		this->mMode = EditMode::Rotate;
+	
+	return true;
+}
+
 void MapViewer::onKeyDown(Key::Code key)
 {
 	if (key == Key::Escape)
 	{
 		this->quit();
-	}
-	else if (key == Key::g || key == Key::G)
-	{
-		this->mMode = EditMode::Move;
-	}
-	else if (key == Key::s || key == Key::S)
-	{
-		this->mMode = EditMode::Scale;
-	}
-	else if (key == Key::r || key == Key::R)
-	{
-		this->mMode = EditMode::Rotate;
-	}
-	else if (key == Key::x)
-	{
-		if (this->mSelectedBrush != 0)
-			this->mSelectedBrush->move(10, 0, 0);
-	}
-	else if (key == Key::c)
-	{
-		if (this->mSelectedBrush != 0)
-			this->mSelectedBrush->move(-10, 0, 0);
-	}
-	else if (key == Key::v)
-	{
-		if (this->mSelectedBrush != 0)
-			this->mSelectedBrush->scale(1.5f, 1, 1, this->mSelectionOrigin);
-	}
-	else if (key == Key::b)
-	{
-		if (this->mSelectedBrush != 0)
-			this->mSelectedBrush->scale(0.75f, 1, 1, this->mSelectionOrigin);
-	}
-	else if (key == Key::n)
-	{
-		if (this->mSelectedBrush != 0)
-			this->mSelectedBrush->rotate(0.75f, 0, 0, this->mSelectionOrigin);
-	}
-	else if (key == Key::m)
-	{
-		if (this->mSelectedBrush != 0)
-			this->mSelectedBrush->rotate(-0.75f, 0, 0, this->mSelectionOrigin);
 	}
 }
 
@@ -370,6 +339,9 @@ void MapViewer::onMouseButtonDown(Mouse::Button button)
 {
 	if (button == Mouse::Left)
 	{
+		if (this->testMenu(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY()) != false)
+			return;
+		
 		if (this->mSelectedBrush != 0)
 		{
 			if (this->mSelectedPlane == 0)
@@ -440,14 +412,69 @@ void MapViewer::onMouseMove(int x, int y)
 			else
 			{
 				// dragg brush
-				Vector3 left = this->mCamera.left().unit() * (x-startx);
-				Vector3 up = this->mCamera.up().unit() * (y-starty);
-				this->mSelectedBrush->move(left.x(), left.y(), left.z());
-				this->mSelectedBrush->move(up.x(), up.y(), up.z());
-				this->mSelectionOrigin = this->mSelectedBrush->origin();
+				if (this->mMode == EditMode::Move)
+				{
+					Vector3 left = this->mCamera.left().unit() * (x-startx);
+					Vector3 up = this->mCamera.up().unit() * (y-starty);
+					this->mSelectedBrush->move(left.x(), left.y(), left.z());
+					this->mSelectedBrush->move(up.x(), up.y(), up.z());
+					this->mSelectionOrigin = this->mSelectedBrush->origin();
+				}
 			}
 		}
 	}
 	startx = x;
 	starty = y;
+}
+
+void MapViewer::renderBoundingBox(const float mins[], const float maxs[], float color[])
+{
+	glActiveTextureARB(GL_TEXTURE1);
+	glDisable(GL_TEXTURE_2D);
+	glActiveTextureARB(GL_TEXTURE0_ARB);
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(color[0], color[1], color[2], color[3]);
+
+	glBegin(GL_LINES);
+	// bottom
+	glVertex3f(mins[0], mins[1], mins[2]);
+	glVertex3f(maxs[0], mins[1], mins[2]);
+
+	glVertex3f(maxs[0], mins[1], mins[2]);
+	glVertex3f(maxs[0], maxs[1], mins[2]);
+
+	glVertex3f(maxs[0], maxs[1], mins[2]);
+	glVertex3f(mins[0], maxs[1], mins[2]);
+
+	glVertex3f(mins[0], maxs[1], mins[2]);
+	glVertex3f(mins[0], mins[1], mins[2]);
+
+	// top
+	glVertex3f(mins[0], maxs[1], maxs[2]);
+	glVertex3f(maxs[0], maxs[1], maxs[2]);
+
+	glVertex3f(maxs[0], maxs[1], maxs[2]);
+	glVertex3f(maxs[0], mins[1], maxs[2]);
+
+	glVertex3f(maxs[0], mins[1], maxs[2]);
+	glVertex3f(mins[0], mins[1], maxs[2]);
+
+	glVertex3f(mins[0], mins[1], maxs[2]);
+	glVertex3f(mins[0], maxs[1], maxs[2]);
+
+	//sides
+	glVertex3f(mins[0], maxs[1], mins[2]);
+	glVertex3f(mins[0], maxs[1], maxs[2]);
+
+	glVertex3f(maxs[0], maxs[1], mins[2]);
+	glVertex3f(maxs[0], maxs[1], maxs[2]);
+
+	glVertex3f(maxs[0], mins[1], mins[2]);
+	glVertex3f(maxs[0], mins[1], maxs[2]);
+
+	glVertex3f(mins[0], mins[1], mins[2]);
+	glVertex3f(mins[0], mins[1], maxs[2]);
+	glEnd();
 }
