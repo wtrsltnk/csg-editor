@@ -128,14 +128,44 @@ void MapViewer::render(int time)
 	
 	glTranslatef(-2, 0, -7);
 	glRotatef(90, 1, 0, 0);
+	if (this->mMode == EditMode::Scale)
+	{
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+		glVertex3f(-1.0f, 0.0f, -1.0f);
+		glVertex3f(-1.0f, 0.0f, 1.0f);
+		glVertex3f(1.0f, 0.0f, 1.0f);
+		glVertex3f(1.0f, 0.0f, -1.0f);
+		glEnd();
+	}
 	glColor3f(1, 0, 0);
-	glutWireSphere(1, 8, 8);
+	glutWireSphere(0.8f, 8, 8);
 	
 	glTranslatef(2, 0, 0);
+	if (this->mMode == EditMode::Move)
+	{
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+		glVertex3f(-1.0f, 0.0f, -1.0f);
+		glVertex3f(-1.0f, 0.0f, 1.0f);
+		glVertex3f(1.0f, 0.0f, 1.0f);
+		glVertex3f(1.0f, 0.0f, -1.0f);
+		glEnd();
+	}
 	glColor3f(0, 1, 0);
 	glutWireCube(1.2);
 	
 	glTranslatef(2, 0, 0);
+	if (this->mMode == EditMode::Rotate)
+	{
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+		glVertex3f(-1.0f, 0.0f, -1.0f);
+		glVertex3f(-1.0f, 0.0f, 1.0f);
+		glVertex3f(1.2f, 0.0f, 1.0f);
+		glVertex3f(1.2f, 0.0f, -1.0f);
+		glEnd();
+	}
 	glColor3f(0, 0, 1.0f);
 	glutWireTetrahedron();
 	
