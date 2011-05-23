@@ -19,6 +19,11 @@ Status::~Status()
 		delete []this->mText;
 }
 
+bool Status::isStatusVisible()
+{
+	return (this->mStart + this->mDuration > this->mLastTime || this->mDuration == -1);
+}
+
 void Status::setStatus(const char* text, int duration)
 {
 	if (this->mText != 0)

@@ -393,7 +393,10 @@ void MapViewer::onMouseMove(int x, int y)
 {
 	Tool* tool = this->testMenu(x, y);
 	if (tool != 0)
-		this->mStatus.setStatus(tool->title(), -1);
+	{
+		if (this->mStatus.isStatusVisible() == false)
+			this->mStatus.setStatus(tool->title(), -1);
+	}
 	else
 		this->mStatus.setStatus("", 0);
 	

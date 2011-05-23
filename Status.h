@@ -16,6 +16,7 @@ public:
 	Status();
 	virtual ~Status();
 
+	bool isStatusVisible();
 	void setStatus(const char* text, int duration = 2000);
 	void render(int time);
 	
