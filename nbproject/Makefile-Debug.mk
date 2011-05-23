@@ -34,7 +34,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/MapViewer.o
+	${OBJECTDIR}/ScaleTool.o \
+	${OBJECTDIR}/Tool.o \
+	${OBJECTDIR}/RotateTool.o \
+	${OBJECTDIR}/MapViewer.o \
+	${OBJECTDIR}/CameraTool.o \
+	${OBJECTDIR}/MoveTool.o
 
 
 # C Compiler Flags
@@ -63,10 +68,35 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/ScaleTool.o: ScaleTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScaleTool.o ScaleTool.cpp
+
+${OBJECTDIR}/Tool.o: Tool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/Tool.o Tool.cpp
+
+${OBJECTDIR}/RotateTool.o: RotateTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/RotateTool.o RotateTool.cpp
+
 ${OBJECTDIR}/MapViewer.o: MapViewer.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MapViewer.o MapViewer.cpp
+
+${OBJECTDIR}/CameraTool.o: CameraTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/CameraTool.o CameraTool.cpp
+
+${OBJECTDIR}/MoveTool.o: MoveTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MoveTool.o MoveTool.cpp
 
 # Subprojects
 .build-subprojects:
