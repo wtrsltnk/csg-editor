@@ -10,7 +10,7 @@
 #include <GL/freeglut.h>
 
 RotateTool::RotateTool()
-	: Tool("Rotate tool")
+	: Tool("Rotate tool (shift+V)", Key::V)
 {
 }
 

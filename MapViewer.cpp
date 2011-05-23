@@ -318,6 +318,20 @@ void MapViewer::onKeyDown(Key::Code key)
 	{
 		this->quit();
 	}
+	else
+	{
+		for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
+		{
+			if ((*itr)->activatorKey() == key)
+			{
+				if (this->mSelectedTool != 0)
+					this->mSelectedTool->deselect();
+				this->mSelectedTool = (*itr);
+				this->mSelectedTool->select();
+				break;
+			}
+		}
+	}
 }
 
 void MapViewer::onMouseButtonDown(Mouse::Button button)

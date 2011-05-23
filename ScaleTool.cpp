@@ -10,7 +10,7 @@
 #include <GL/freeglut.h>
 
 ScaleTool::ScaleTool()
-	: Tool("Scale tool")
+	: Tool("Scale tool (shift+C)", Key::C)
 {
 }
 

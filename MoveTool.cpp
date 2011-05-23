@@ -10,7 +10,7 @@
 #include <GL/freeglut.h>
 
 MoveTool::MoveTool()
-	: Tool("Move tool"), mDragging(false)
+	: Tool("Move tool (shift+X)", Key::X), mDragging(false)
 {
 }
 

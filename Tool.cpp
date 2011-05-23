@@ -7,7 +7,8 @@
 
 #include "Tool.h"
 
-Tool::Tool(const char* title)
+Tool::Tool(const char* title, Key::Code activatorKey)
+	: mActivatorKey(activatorKey)
 {
 	int i = 0;
 	while (title[i] != '\0')
@@ -29,4 +30,9 @@ bool Tool::initialize(MapViewer* viewer)
 const char* Tool::title() const
 {
 	return this->mTitle;
+}
+
+Key::Code Tool::activatorKey() const
+{
+	return this->mActivatorKey;
 }

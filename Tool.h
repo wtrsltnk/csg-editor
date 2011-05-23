@@ -15,7 +15,7 @@ class MapViewer;
 class Tool
 {
 public:
-	Tool(const char* title);
+	Tool(const char* title, Key::Code activatorKey);
 	virtual ~Tool();
 	
 	virtual void select() { }
@@ -35,10 +35,12 @@ public:
 	virtual bool onMouseMove(int x, int y) { return false; }
 	
 	const char* title() const;
+	Key::Code activatorKey() const;
 	
 protected:
 	MapViewer* mViewer;
 	char mTitle[32];
+	Key::Code mActivatorKey;
 };
 
 #endif	/* TOOL_H */

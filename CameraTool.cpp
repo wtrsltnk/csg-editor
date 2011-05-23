@@ -13,7 +13,7 @@
 #define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
 
 CameraTool::CameraTool()
-	: Tool("Camera tool"), mDragging(false)
+	: Tool("Camera tool (shift+Z)", Key::Z), mDragging(false)
 {
 }
 
