@@ -16,6 +16,9 @@ public:
 	CameraTool();
 	virtual ~CameraTool();
 
+	virtual void select();
+	virtual void deselect();
+
 	virtual void prerender(int time);
 	virtual void renderMinitature(bool selected);
 	virtual void renderHitTestMinitature();

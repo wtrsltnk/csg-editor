@@ -16,6 +16,9 @@ public:
 	MoveTool();
 	virtual ~MoveTool();
 	
+	virtual void select();
+	virtual void deselect();
+
 	virtual void render(int time);
 	virtual void renderHitTest();
 	virtual void renderMinitature(bool selected);

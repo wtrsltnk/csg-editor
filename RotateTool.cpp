@@ -10,10 +10,20 @@
 #include <GL/freeglut.h>
 
 RotateTool::RotateTool()
+	: Tool("Rotate tool")
 {
 }
 
 RotateTool::~RotateTool()
+{
+}
+
+void RotateTool::select()
+{
+	this->mViewer->mStatus.setStatus("Rotate tool selected");
+}
+
+void RotateTool::deselect()
 {
 }
 

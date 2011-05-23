@@ -10,10 +10,20 @@
 #include <GL/freeglut.h>
 
 ScaleTool::ScaleTool()
+	: Tool("Scale tool")
 {
 }
 
 ScaleTool::~ScaleTool()
+{
+}
+
+void ScaleTool::select()
+{
+	this->mViewer->mStatus.setStatus("Scale tool selected");
+}
+
+void ScaleTool::deselect()
 {
 }
 

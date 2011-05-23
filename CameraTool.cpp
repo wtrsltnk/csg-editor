@@ -13,11 +13,20 @@
 #define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
 
 CameraTool::CameraTool()
-	: mDragging(false)
+	: Tool("Camera tool"), mDragging(false)
 {
 }
 
 CameraTool::~CameraTool()
+{
+}
+
+void CameraTool::select()
+{
+	this->mViewer->mStatus.setStatus("Camera tool selected");
+}
+
+void CameraTool::deselect()
 {
 }
 

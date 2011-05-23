@@ -9,6 +9,7 @@
 #define	MAPVIEWER_H
 
 #include "Tool.h"
+#include "Status.h"
 #include <GlutApplication.h>
 #include <common/camera.h>
 #include <geo/Scene.h>
@@ -44,7 +45,7 @@ public:
 	geo::Brush* selectBrush(int mousex, int mousey);
 	geo::Plane* selectPlane(geo::Brush* brush, int mousex, int mousey);
 	bool selectHandle(int mousex, int mousey);
-	bool testMenu(int mousex, int mousey);
+	Tool* testMenu(int mousex, int mousey);
 
 	geo::Scene mScene;
 	geo::Brush* mSelectedBrush;
@@ -55,6 +56,7 @@ public:
 	Camera mCamera;
 	std::vector<Tool*> mTools;
 	Tool* mSelectedTool;
+	Status mStatus;
 
 };
 

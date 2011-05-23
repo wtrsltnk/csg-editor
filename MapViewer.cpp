@@ -10,6 +10,7 @@
 #include "ScaleTool.h"
 #include "RotateTool.h"
 #include "CameraTool.h"
+#include "Status.h"
 #include <GLee.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -53,8 +54,10 @@ bool MapViewer::initialize(int argc, char* argv[])
 	
 	this->mSelectedTool = this->mTools[0];
 	
-	this->mCamera.rotateX(-90 * 3.14159265 / 180.0f);
+	this->mCamera.rotateX(-90 * 3.14159265f / 180.0f);
 	
+	this->mStatus.mFont = new ui::Font();
+	this->mStatus.mFont->initializeFont("Ubuntu-R.ttf");
 	return true;
 }
 
@@ -136,6 +139,8 @@ void MapViewer::render(int time)
 	}
 	
 	glViewport(0, 0, width, height);
+	
+	this->mStatus.render(time);
 }
 
 void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
@@ -273,7 +278,7 @@ bool MapViewer::selectHandle(int mousex, int mousey)
 	return false;
 }
 
-bool MapViewer::testMenu(int mousex, int mousey)
+Tool* MapViewer::testMenu(int mousex, int mousey)
 {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -302,11 +307,9 @@ bool MapViewer::testMenu(int mousex, int mousey)
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	if (pixel[0] == 255 && pixel[1] == 255 && pixel[2] == 255)
-		return false;
+		return 0;
 	
-	this->mSelectedTool = this->mTools[pixel[0]];
-	
-	return true;
+	return this->mTools[pixel[0]];
 }
 
 void MapViewer::onKeyDown(Key::Code key)
@@ -320,8 +323,17 @@ void MapViewer::onKeyDown(Key::Code key)
 void MapViewer::onMouseButtonDown(Mouse::Button button)
 {
 	if (button == Mouse::Left)
-		if (this->testMenu(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY()) != false)
+	{
+		Tool* tool = this->testMenu(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+		if (tool != 0)
+		{
+			if (this->mSelectedTool != 0)
+				this->mSelectedTool->deselect();
+			this->mSelectedTool = tool;
+			this->mSelectedTool->select();
 			return;
+		}
+	}
 		
 	if (this->mSelectedTool != 0)
 		if (this->mSelectedTool->onMouseButtonDown(button) == true)
@@ -379,6 +391,12 @@ void MapViewer::onMouseButtonUp(Mouse::Button button)
 
 void MapViewer::onMouseMove(int x, int y)
 {
+	Tool* tool = this->testMenu(x, y);
+	if (tool != 0)
+		this->mStatus.setStatus(tool->title(), -1);
+	else
+		this->mStatus.setStatus("", 0);
+	
 	if (this->mSelectedTool != 0)
 		this->mSelectedTool->onMouseMove(x, y);
 }

@@ -38,8 +38,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/Tool.o \
 	${OBJECTDIR}/RotateTool.o \
 	${OBJECTDIR}/MapViewer.o \
+	${OBJECTDIR}/MoveTool.o \
 	${OBJECTDIR}/CameraTool.o \
-	${OBJECTDIR}/MoveTool.o
+	${OBJECTDIR}/Status.o
 
 
 # C Compiler Flags
@@ -88,15 +89,20 @@ ${OBJECTDIR}/MapViewer.o: MapViewer.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MapViewer.o MapViewer.cpp
 
+${OBJECTDIR}/MoveTool.o: MoveTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MoveTool.o MoveTool.cpp
+
 ${OBJECTDIR}/CameraTool.o: CameraTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/CameraTool.o CameraTool.cpp
 
-${OBJECTDIR}/MoveTool.o: MoveTool.cpp 
+${OBJECTDIR}/Status.o: Status.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MoveTool.o MoveTool.cpp
+	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/Status.o Status.cpp
 
 # Subprojects
 .build-subprojects:

@@ -10,11 +10,20 @@
 #include <GL/freeglut.h>
 
 MoveTool::MoveTool()
-	: mDragging(false)
+	: Tool("Move tool"), mDragging(false)
 {
 }
 
 MoveTool::~MoveTool()
+{
+}
+
+void MoveTool::select()
+{
+	this->mViewer->mStatus.setStatus("Move tool selected");
+}
+
+void MoveTool::deselect()
 {
 }
 

@@ -15,8 +15,11 @@ class MapViewer;
 class Tool
 {
 public:
-	Tool();
+	Tool(const char* title);
 	virtual ~Tool();
+	
+	virtual void select() { }
+	virtual void deselect() { }
 
 	virtual void prerender(int time) { }
 	virtual void render(int time) { }
@@ -31,8 +34,11 @@ public:
 	virtual bool onMouseButtonUp(Mouse::Button button) { return false; }
 	virtual bool onMouseMove(int x, int y) { return false; }
 	
+	const char* title() const;
+	
 protected:
 	MapViewer* mViewer;
+	char mTitle[32];
 };
 
 #endif	/* TOOL_H */
