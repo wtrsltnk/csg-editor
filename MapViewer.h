@@ -34,7 +34,7 @@ public:
 	virtual bool initialize(int argc, char* argv[]);
 	virtual void resize(int w, int h);
 	virtual void onKeyDown(Key::Code key);
-	virtual void onKeyUp(Key::Code key) { }
+	virtual void onKeyUp(Key::Code key);
 	virtual void onMouseButtonDown(Mouse::Button button);
 	virtual void onMouseButtonUp(Mouse::Button button);
 	virtual void onMouseMove(int x, int y);

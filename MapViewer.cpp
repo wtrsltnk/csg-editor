@@ -314,24 +314,33 @@ Tool* MapViewer::testMenu(int mousex, int mousey)
 
 void MapViewer::onKeyDown(Key::Code key)
 {
-	if (key == Key::Escape)
+	if (this->mSelectedTool == 0 || this->mSelectedTool->onKeyDown(key) == false)
 	{
-		this->quit();
-	}
-	else
-	{
-		for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
+		if (key == Key::Escape)
 		{
-			if ((*itr)->activatorKey() == key)
+			this->quit();
+		}
+		else
+		{
+			for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
 			{
-				if (this->mSelectedTool != 0)
-					this->mSelectedTool->deselect();
-				this->mSelectedTool = (*itr);
-				this->mSelectedTool->select();
-				break;
+				if ((*itr)->activatorKey() == key)
+				{
+					if (this->mSelectedTool != 0)
+						this->mSelectedTool->deselect();
+					this->mSelectedTool = (*itr);
+					this->mSelectedTool->select();
+					break;
+				}
 			}
 		}
 	}
+}
+
+void MapViewer::onKeyUp(Key::Code key)
+{
+	if (this->mSelectedTool != 0)
+		this->mSelectedTool->onKeyUp(key);
 }
 
 void MapViewer::onMouseButtonDown(Mouse::Button button)

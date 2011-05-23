@@ -6,6 +6,8 @@
  */
 
 #include "Tool.h"
+#include <GL/freeglut.h>
+#include <math.h>
 
 Tool::Tool(const char* title, Key::Code activatorKey)
 	: mActivatorKey(activatorKey)
@@ -35,4 +37,39 @@ const char* Tool::title() const
 Key::Code Tool::activatorKey() const
 {
 	return this->mActivatorKey;
+}
+
+void Tool::renderGrid(int cellsize, int cellcount, Camera& camera)
+{
+	int X = 0, Y = 1, Z = 2;
+
+	if (fabs(camera.forward().x()) > fabs(camera.forward().z()) && 
+			fabs(camera.forward().x()) > fabs(camera.forward().y()))
+	{
+		X = 2;
+		Y = 1;
+		Z = 0;
+	}
+	if (fabs(camera.forward().y()) > fabs(camera.forward().z()) && 
+			fabs(camera.forward().y()) > fabs(camera.forward().x()))
+	{
+		X = 1;
+		Y = 2;
+		Z = 0;
+	}
+	
+	glBegin(GL_LINES);
+	for (int i = 0; i <= cellcount; i++)
+	{
+		float l1[] = { -cellsize * (cellcount/2.0f) + i * cellsize,  cellsize * (cellcount/2.0f), 0.0f };
+		float l2[] = { -cellsize * (cellcount/2.0f) + i * cellsize, -cellsize * (cellcount/2.0f), 0.0f };
+		float l3[] = {  cellsize * (cellcount/2.0f), -cellsize * (cellcount/2.0f) + i * cellsize, 0.0f };
+		float l4[] = { -cellsize * (cellcount/2.0f), -cellsize * (cellcount/2.0f) + i * cellsize, 0.0f };
+		
+		glVertex3f(l1[X], l1[Y], l1[Z]);
+		glVertex3f(l2[X], l2[Y], l2[Z]);
+		glVertex3f(l3[X], l3[Y], l3[Z]);
+		glVertex3f(l4[X], l4[Y], l4[Z]);
+	}
+	glEnd();
 }

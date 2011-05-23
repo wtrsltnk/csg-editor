@@ -9,6 +9,7 @@
 #define	MOVETOOL_H
 
 #include "Tool.h"
+#include <common/vector3.h>
 
 class MoveTool : public Tool
 {
@@ -24,6 +25,7 @@ public:
 	virtual void renderMinitature(bool selected);
 	virtual void renderHitTestMinitature();
 	
+	virtual bool onKeyDown(Key::Code key);
 	virtual bool onMouseButtonDown(Mouse::Button button);
 	virtual bool onMouseButtonUp(Mouse::Button button);
 	virtual bool onMouseMove(int x, int y);
@@ -31,6 +33,7 @@ public:
 private:
 	bool mDragging;
 	int startx, starty;
+	Vector3 mInitialPosition;
 
 };
 

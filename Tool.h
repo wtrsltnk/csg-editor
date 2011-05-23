@@ -9,6 +9,7 @@
 #define	TOOL_H
 
 #include <userInput.h>
+#include <common/camera.h>
 
 class MapViewer;
 
@@ -28,14 +29,16 @@ public:
 	virtual void renderHitTestMinitature() { }
 	
 	virtual bool initialize(MapViewer* viewer);
-	virtual void onKeyDown(Key::Code key) { }
-	virtual void onKeyUp(Key::Code key) { }
+	virtual bool onKeyDown(Key::Code key) { }
+	virtual bool onKeyUp(Key::Code key) { }
 	virtual bool onMouseButtonDown(Mouse::Button button) { return false; }
 	virtual bool onMouseButtonUp(Mouse::Button button) { return false; }
 	virtual bool onMouseMove(int x, int y) { return false; }
 	
 	const char* title() const;
 	Key::Code activatorKey() const;
+	
+	static void renderGrid(int cellsize, int cellcount, Camera& camera);
 	
 protected:
 	MapViewer* mViewer;

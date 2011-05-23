@@ -47,6 +47,21 @@ void CameraTool::prerender(int time)
 
 }
 
+void CameraTool::render(int time)
+{
+	if (this->mViewer->mSelectedBrush != 0)
+	{
+		glPushMatrix();
+		glTranslatef(
+				this->mViewer->mSelectionOrigin.x(), 
+				this->mViewer->mSelectionOrigin.y(), 
+				this->mViewer->mSelectionOrigin.z()
+				);
+		Tool::renderGrid(32, 20, this->mViewer->mCamera);
+		glPopMatrix();
+	}
+}
+
 void CameraTool::renderMinitature(bool selected)
 {
 	glPushMatrix();
