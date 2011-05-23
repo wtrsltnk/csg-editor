@@ -21,7 +21,7 @@ Status::~Status()
 
 bool Status::isStatusVisible()
 {
-	return (this->mStart + this->mDuration > this->mLastTime || this->mDuration == -1);
+	return (this->mStart + this->mDuration > this->mLastTime);
 }
 
 void Status::setStatus(const char* text, int duration)

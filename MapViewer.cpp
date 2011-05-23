@@ -391,14 +391,14 @@ void MapViewer::onMouseButtonUp(Mouse::Button button)
 
 void MapViewer::onMouseMove(int x, int y)
 {
-	Tool* tool = this->testMenu(x, y);
-	if (tool != 0)
+	if (this->mStatus.isStatusVisible() == false)
 	{
-		if (this->mStatus.isStatusVisible() == false)
-			this->mStatus.setStatus(tool->title(), -1);
+		Tool* tool = this->testMenu(x, y);
+		if (tool != 0)
+				this->mStatus.setStatus(tool->title(), -1);
+		else
+			this->mStatus.setStatus("", 0);
 	}
-	else
-		this->mStatus.setStatus("", 0);
 	
 	if (this->mSelectedTool != 0)
 		this->mSelectedTool->onMouseMove(x, y);
