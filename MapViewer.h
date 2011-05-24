@@ -46,6 +46,7 @@ public:
 	geo::Plane* selectPlane(geo::Brush* brush, int mousex, int mousey);
 	bool selectHandle(int mousex, int mousey);
 	Tool* testMenu(int mousex, int mousey);
+	bool getScreenPosition(const Vector3& worldPosition, Vector3& screenPosition);
 
 	geo::Scene mScene;
 	geo::Brush* mSelectedBrush;

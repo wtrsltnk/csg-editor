@@ -38,19 +38,6 @@ void Status::render(int time)
 {
 	if (this->mStart + this->mDuration > time || this->mDuration == -1)
 	{
-		GLint viewport[4];
-		glGetIntegerv(GL_VIEWPORT, viewport);
-
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
-
-		glOrtho(0, viewport[2], 0, viewport[3], -10.0f, 10.0f);
-
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-		
 		glActiveTexture(GL_TEXTURE0);
 		
 		glEnable(GL_TEXTURE_2D);
@@ -66,11 +53,6 @@ void Status::render(int time)
 		glDisable(GL_BLEND);
 		
 		glEnable(GL_DEPTH_TEST);
-		
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
 	}
 	this->mLastTime = time;
 }

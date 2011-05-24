@@ -78,6 +78,7 @@ void MapViewer::resize(int w, int h)
 
 void MapViewer::render(int time)
 {
+	Vector3 project2D;
 	if (this->mSelectedTool != 0)
 		this->mSelectedTool->prerender(time);
 	
@@ -126,6 +127,8 @@ void MapViewer::render(int time)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		if (this->mSelectedTool != 0)
 			this->mSelectedTool->render(time);
+		this->getScreenPosition(this->mSelectionOrigin, project2D);
+
 	}
 	glPopMatrix();
 	
@@ -139,8 +142,32 @@ void MapViewer::render(int time)
 	}
 	
 	glViewport(0, 0, width, height);
-	
+
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glOrtho(0, viewport[2], 0, viewport[3], -10.0f, 10.0f);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
 	this->mStatus.render(time);
+	
+	glRasterPos2d(project2D.x(), project2D.y());
+	glutBitmapString(GLUT_BITMAP_9_BY_15, (const unsigned char*)"Wouter");
+	
+	glTranslatef(project2D.x(), project2D.y(), 0);
+	glutSolidTorus(5, 10, 12, 12);
+	
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
 }
 
 void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
@@ -310,6 +337,30 @@ Tool* MapViewer::testMenu(int mousex, int mousey)
 		return 0;
 	
 	return this->mTools[pixel[0]];
+}
+
+bool MapViewer::getScreenPosition(const Vector3& worldPosition, Vector3& screenPosition)
+{
+	GLint viewport[4];
+	GLdouble modelview[16];
+	GLdouble projection[16];
+	GLdouble winX, winY, winZ;
+
+	glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+	glGetDoublev(GL_PROJECTION_MATRIX, projection);
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	gluProject(
+			worldPosition.x(), worldPosition.y(), worldPosition.z(),
+			modelview, projection, viewport, 
+			(GLdouble*)&winX, (GLdouble*)&winY, (GLdouble*)&winZ
+		);
+	
+	screenPosition.x(winX);
+	screenPosition.y(winY);
+	screenPosition.z(winZ);
+	
+	return true;
 }
 
 void MapViewer::onKeyDown(Key::Code key)
