@@ -13,7 +13,7 @@
 #define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
 
 CameraTool::CameraTool()
-	: Tool("Camera tool (shift+Z)", Key::Z), mDragging(false)
+	: Tool("Camera tool (shift+Z)", Key::Z), mDragging1(false), mDragging2(false)
 {
 }
 
@@ -102,7 +102,9 @@ void CameraTool::renderHitTestMinitature()
 bool CameraTool::onMouseButtonDown(Mouse::Button button)
 {
 	if (button == Mouse::Left)
-		this->mDragging = true;
+		this->mDragging1 = true;
+	if (button == Mouse::Right)
+		this->mDragging2 = true;
 	this->startx = MouseState::currentState().getMousePositionX();
 	this->starty = MouseState::currentState().getMousePositionY();
 	
@@ -111,14 +113,24 @@ bool CameraTool::onMouseButtonDown(Mouse::Button button)
 
 bool CameraTool::onMouseButtonUp(Mouse::Button button)
 {
-	this->mDragging = false;
+	this->mDragging1 = false;
+	this->mDragging2 = false;
 	return true;
 }
 
 bool CameraTool::onMouseMove(int x, int y)
 {
-	if (this->mDragging)
+	if (this->mDragging1)
 		this->mViewer->mCamera.rotate(Deg2Rad((this->starty-y)/10.0f), 0, Deg2Rad((x-this->startx)/10.0f));
+	if (this->mDragging2)
+	{
+		// ToDo : dit werkt nog niet zoals het bedoeld is!
+		Vector3 pos = this->mViewer->mCamera.position();
+		Vector3 diff = this->mViewer->mSelectionOrigin - pos;
+		this->mViewer->mCamera.moveForward(diff.length());
+		this->mViewer->mCamera.rotate(Deg2Rad((this->starty-y)/10.0f), 0, Deg2Rad((x-this->startx)/10.0f));
+		this->mViewer->mCamera.moveForward(-diff.length());
+	}
 	
 	this->startx = x;
 	this->starty = y;

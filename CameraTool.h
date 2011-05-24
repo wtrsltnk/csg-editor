@@ -29,7 +29,8 @@ public:
 	virtual bool onMouseMove(int x, int y);
 	
 private:
-	bool mDragging;
+	bool mDragging1;
+	bool mDragging2;
 	int startx, starty;
 };
 
