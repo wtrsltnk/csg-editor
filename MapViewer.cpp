@@ -18,9 +18,7 @@
 #include <GL/glu.h>
 #include <geo/MapLoader.h>
 #include <stdio.h>
-#include <GL/freeglut_std.h>
-#include <c++/4.4/bits/stl_bvector.h>
-#include <GL/freeglut_ext.h>
+#include <GL/freeglut.h>
 
 GlutApplication* gApplication = new MapViewer();
 

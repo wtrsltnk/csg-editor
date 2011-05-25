@@ -177,8 +177,8 @@ void AllInOneTool::renderHitTestMinitature()
 bool AllInOneTool::onMouseButtonDown(Mouse::Button button)
 {
 	this->mHasMoved = false;
-	this->startx = MouseState::currentState().getMousePositionX();
-	this->starty = MouseState::currentState().getMousePositionY();
+	this->mStartX = this->mPreviousX = MouseState::currentState().getMousePositionX();
+	this->mStartY = this->mPreviousY = MouseState::currentState().getMousePositionY();
 	
 	if (this->mHoverType != HoverType::None)
 	{
@@ -199,7 +199,7 @@ bool AllInOneTool::onMouseButtonUp(Mouse::Button button)
 	this->mDragging1 = false;
 	this->mHoverType1 = HoverType::None;
 	
-	if (button == Mouse::Left && this->mHasMoved == false)
+	if (button == Mouse::Left && (Vector3(this->mStartX, this->mStartY, 0)-Vector3(this->mPreviousX, this->mPreviousY, 0)).length() < 5)
 	{
 		if (this->mViewer->mSelectedBrush != 0)
 		{
@@ -254,27 +254,27 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	
 	if (this->mHoverType1 == HoverType::None && MouseState::currentState().isButtonPressed(Mouse::Left))
 	{
-		this->mViewer->mCamera.rotate(Deg2Rad((this->starty-y)/10.0f), 0, Deg2Rad((x-this->startx)/10.0f));
+		this->mViewer->mCamera.rotate(Deg2Rad((this->mPreviousY-y)/10.0f), 0, Deg2Rad((x-this->mPreviousX)/10.0f));
 	}
 	else if (this->mHoverType1 == HoverType::Move)
 	{
-		Vector3 left = this->mViewer->mCamera.left().unit() * (x-startx);
-		Vector3 up = this->mViewer->mCamera.up().unit() * (y-starty);
+		Vector3 left = this->mViewer->mCamera.left().unit() * (x-mPreviousX);
+		Vector3 up = this->mViewer->mCamera.up().unit() * (y-mPreviousY);
 		this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
 		this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
 		this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
 	}
 	else if (this->mHoverType1 == HoverType::Scale)
 	{
-		float scale = (x - this->startx) / 100.0f;
+		float scale = (x - this->mPreviousX) / 100.0f;
 		this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
 	}
 	else if (this->mHoverType1 == HoverType::Rotate)
 	{
 	}
 	
-	this->startx = x;
-	this->starty = y;
+	this->mPreviousX = x;
+	this->mPreviousY = y;
 	
 	return true;
 }

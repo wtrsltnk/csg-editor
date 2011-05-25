@@ -47,7 +47,8 @@ private:
 	bool mHasMoved;
 	bool mDragging1;
 	int mHoverType1;
-	int startx, starty;
+	int mPreviousX, mPreviousY;
+	int mStartX, mStartY;
 
 	Vector3 mPosition;
 	int mSize;
