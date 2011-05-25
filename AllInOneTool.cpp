@@ -65,76 +65,91 @@ void AllInOneTool::prerender(int time)
 
 void AllInOneTool::render(int time)
 {
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
+	if (this->mViewer->mSelectedBrush != 0)
+	{
+		glPushMatrix();
+		glTranslatef(
+				this->mViewer->mSelectionOrigin.x(), 
+				this->mViewer->mSelectionOrigin.y(), 
+				this->mViewer->mSelectionOrigin.z()
+				);
+		Tool::renderGrid(32, 20, this->mViewer->mCamera);
+		glPopMatrix();
+		
+		if (this->mViewer->mSelectionProjectedOrigin.z() < 1.0f)
+		{
+			GLint viewport[4];
+			glGetIntegerv(GL_VIEWPORT, viewport);
 
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
+			glMatrixMode(GL_PROJECTION);
+			glPushMatrix();
+			glLoadIdentity();
 
-	glOrtho(0, viewport[2], 0, viewport[3], -10.0f, 10.0f);
+			glOrtho(0, viewport[2], 0, viewport[3], -10.0f, 10.0f);
 
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	
-	glEnable(GL_TEXTURE_2D);
-	this->mPosition = this->mViewer->mSelectionProjectedOrigin;
-	glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-	glPushMatrix();
-	glTranslatef(this->mPosition.x(), this->mPosition.y(), 5);
-	
-	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
-	
-	this->mColors->use();
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
-	glTexCoord2f(0, 1); glVertex3f(-this->mSize,  mSize, 0.0f);
-	glEnd();
-	
-	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
-	if (this->mHoverType == HoverType::Scale)
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	this->mScale->use();
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
-	glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
-	glEnd();
-	
-	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
-	if (this->mHoverType == HoverType::Move)
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	this->mMove->use();
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
-	glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
-	glEnd();
-	
-	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
-	if (this->mHoverType == HoverType::Rotate)
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	this->mRotate->use();
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
-	glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
-	glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
-	glEnd();
-	
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			glLoadIdentity();
+
+			glEnable(GL_TEXTURE_2D);
+			this->mPosition = this->mViewer->mSelectionProjectedOrigin;
+			glEnable(GL_BLEND);
+			glDisable(GL_DEPTH_TEST);
+			glPushMatrix();
+			glTranslatef(this->mPosition.x(), this->mPosition.y(), 5);
+
+			glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
+
+			this->mColors->use();
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
+			glTexCoord2f(0, 1); glVertex3f(-this->mSize,  mSize, 0.0f);
+			glEnd();
+
+			glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
+			if (this->mHoverType == HoverType::Scale)
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			this->mScale->use();
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
+			glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
+			glEnd();
+
+			glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
+			if (this->mHoverType == HoverType::Move)
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			this->mMove->use();
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
+			glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
+			glEnd();
+
+			glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
+			if (this->mHoverType == HoverType::Rotate)
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			this->mRotate->use();
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0); glVertex3f(-this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 0); glVertex3f( this->mSize, -this->mSize, 0.0f);
+			glTexCoord2f(1, 1); glVertex3f( this->mSize,  this->mSize, 0.0f);
+			glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
+			glEnd();
+
+			glPopMatrix();
+			glDisable(GL_TEXTURE_2D);
+
+			glMatrixMode(GL_PROJECTION);
+			glPopMatrix();
+			glMatrixMode(GL_MODELVIEW);
+			glPopMatrix();
+		}
+	}
 }
 
 void AllInOneTool::renderMinitature(bool selected)
@@ -255,6 +270,9 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	if (this->mHoverType1 == HoverType::None && MouseState::currentState().isButtonPressed(Mouse::Left))
 	{
 		this->mViewer->mCamera.rotate(Deg2Rad((this->mPreviousY-y)/10.0f), 0, Deg2Rad((x-this->mPreviousX)/10.0f));
+	
+		this->mPreviousX = x;
+		this->mPreviousY = y;
 	}
 	else if (this->mHoverType1 == HoverType::Move)
 	{
@@ -263,18 +281,21 @@ bool AllInOneTool::onMouseMove(int x, int y)
 		this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
 		this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
 		this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+	
+		this->mPreviousX = x;
+		this->mPreviousY = y;
 	}
 	else if (this->mHoverType1 == HoverType::Scale)
 	{
 		float scale = (x - this->mPreviousX) / 100.0f;
 		this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
+	
+		this->mPreviousX = x;
+		this->mPreviousY = y;
 	}
 	else if (this->mHoverType1 == HoverType::Rotate)
 	{
 	}
-	
-	this->mPreviousX = x;
-	this->mPreviousY = y;
 	
 	return true;
 }

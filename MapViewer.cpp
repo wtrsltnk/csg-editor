@@ -88,12 +88,9 @@ void MapViewer::render(int time)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
 	glPushMatrix();
-	
 	this->mCamera.update();
 
 	float lineColor[] = { -1, 1, 1, 1.0f };
-	float red[] = { 1, 0, 0, 1.0f };
-	float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float bb[] = { 0.0f, 1.0f, 0.0f, 0.5f };
 	glEnable(GL_DEPTH_TEST);
 	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
@@ -101,6 +98,7 @@ void MapViewer::render(int time)
 		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
 			this->renderBrush(*b, lineColor);
 	}
+	
 	if (this->mSelectedBrush != 0)
 	{
 		glDisable(GL_DEPTH_TEST);
@@ -188,6 +186,7 @@ void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 	for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
 	{
 		glBegin(GL_POLYGON);
+		glNormal3fv((*p).mNormal);
 		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
 			glVertex3fv(brush->mVertices[(*itr)]);
 		glEnd();
