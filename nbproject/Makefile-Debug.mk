@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Tool.o \
 	${OBJECTDIR}/RotateTool.o \
 	${OBJECTDIR}/MapViewer.o \
+	${OBJECTDIR}/DiskMenu.o \
 	${OBJECTDIR}/MoveTool.o \
 	${OBJECTDIR}/CameraTool.o \
 	${OBJECTDIR}/Status.o
@@ -88,6 +89,11 @@ ${OBJECTDIR}/MapViewer.o: MapViewer.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MapViewer.o MapViewer.cpp
+
+${OBJECTDIR}/DiskMenu.o: DiskMenu.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/DiskMenu.o DiskMenu.cpp
 
 ${OBJECTDIR}/MoveTool.o: MoveTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}

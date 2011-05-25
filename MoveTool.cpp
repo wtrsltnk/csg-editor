@@ -110,7 +110,8 @@ bool MoveTool::onMouseButtonDown(Mouse::Button button)
 		if(this->mDragging == true)
 		{
 			this->mDragging = false;
-			this->mInitialPosition = this->mViewer->mSelectedBrush->origin();
+			if (this->mViewer->mSelectedBrush != 0)
+				this->mInitialPosition = this->mViewer->mSelectedBrush->origin();
 			return true;
 		}
 		else

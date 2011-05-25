@@ -58,6 +58,7 @@ void Tool::renderGrid(int cellsize, int cellcount, Camera& camera)
 		Z = 0;
 	}
 	
+	glColor4f(1, 1, 1, 0.2f);
 	glBegin(GL_LINES);
 	for (int i = 0; i <= cellcount; i++)
 	{

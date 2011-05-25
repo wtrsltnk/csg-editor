@@ -58,6 +58,9 @@ bool MapViewer::initialize(int argc, char* argv[])
 	
 	this->mStatus.mFont = new ui::Font();
 	this->mStatus.mFont->initializeFont("Ubuntu-R.ttf");
+	
+	this->mDiskMenu.initialize();
+	
 	return true;
 }
 
@@ -158,11 +161,16 @@ void MapViewer::render(int time)
 
 	this->mStatus.render(time);
 	
-	glRasterPos2d(project2D.x(), project2D.y());
-	glutBitmapString(GLUT_BITMAP_9_BY_15, (const unsigned char*)"Wouter");
-	
-	glTranslatef(project2D.x(), project2D.y(), 0);
-	glutSolidTorus(5, 10, 12, 12);
+	if (this->mSelectedBrush != 0)
+	{
+		glRasterPos2d(project2D.x(), project2D.y());
+		glutBitmapString(GLUT_BITMAP_9_BY_15, (const unsigned char*)"Wouter");
+
+		glEnable(GL_TEXTURE_2D);
+		this->mDiskMenu.mPosition = project2D;
+		this->mDiskMenu.render(time);
+		glDisable(GL_TEXTURE_2D);
+	}
 	
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -465,6 +473,7 @@ void MapViewer::onMouseButtonUp(Mouse::Button button)
 
 void MapViewer::onMouseMove(int x, int y)
 {
+	this->mDiskMenu.testHover(x, y);
 	if (this->mStatus.isStatusVisible() == false)
 	{
 		Tool* tool = this->testMenu(x, y);

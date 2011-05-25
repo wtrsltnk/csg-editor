@@ -10,6 +10,7 @@
 
 #include "Tool.h"
 #include "Status.h"
+#include "DiskMenu.h"
 #include <GlutApplication.h>
 #include <common/camera.h>
 #include <geo/Scene.h>
@@ -58,6 +59,7 @@ public:
 	std::vector<Tool*> mTools;
 	Tool* mSelectedTool;
 	Status mStatus;
+	DiskMenu mDiskMenu;
 
 };
 
