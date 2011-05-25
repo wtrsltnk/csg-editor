@@ -54,12 +54,11 @@ public:
 	geo::Plane* mSelectedPlane;
 	Vector3 mSelectionOrigin;
 	Vector3 mSelectionProjectedOrigin;
-	int mMode;
-	bool mDragging;
 	Camera mCamera;
 	std::vector<Tool*> mTools;
 	Tool* mSelectedTool;
 	Status mStatus;
+	bool mMenuFocus;
 
 };
 

@@ -25,7 +25,7 @@
 GlutApplication* gApplication = new MapViewer();
 
 MapViewer::MapViewer()
-	: GlutApplication("Map Viewer"), mSelectedBrush(0), mSelectedPlane(0), mMode(0), mDragging(false), mSelectedTool(0)
+	: GlutApplication("Map Viewer"), mSelectedBrush(0), mSelectedPlane(0), mSelectedTool(0)
 {
 }
 
@@ -46,17 +46,18 @@ bool MapViewer::initialize(int argc, char* argv[])
 		loader.load("dust_001.map", &this->mScene);
 	}
 	
-	this->mTools.push_back(new CameraTool());
-	this->mTools.push_back(new MoveTool());
-	this->mTools.push_back(new ScaleTool());
-	this->mTools.push_back(new RotateTool());
 	this->mTools.push_back(new AllInOneTool());
-	this->mTools.push_back(new SelectionTool());
+//	this->mTools.push_back(new CameraTool());
+//	this->mTools.push_back(new MoveTool());
+//	this->mTools.push_back(new ScaleTool());
+//	this->mTools.push_back(new RotateTool());
+//	this->mTools.push_back(new SelectionTool());
 
 	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
 		(*itr)->initialize(this);
 	
 	this->mSelectedTool = this->mTools[0];
+	this->mSelectedTool->select();
 	
 	this->mCamera.rotateX(-90 * 3.14159265f / 180.0f);
 	
@@ -132,7 +133,6 @@ void MapViewer::render(int time)
 		if (this->mSelectedTool != 0)
 			this->mSelectedTool->render(time);
 		this->getScreenPosition(this->mSelectionOrigin, this->mSelectionProjectedOrigin);
-
 	}
 	glPopMatrix();
 	
@@ -403,6 +403,7 @@ void MapViewer::onMouseButtonDown(Mouse::Button button)
 				this->mSelectedTool->deselect();
 			this->mSelectedTool = tool;
 			this->mSelectedTool->select();
+			this->mMenuFocus = true;
 			return;
 		}
 	}
@@ -414,8 +415,9 @@ void MapViewer::onMouseButtonDown(Mouse::Button button)
 
 void MapViewer::onMouseButtonUp(Mouse::Button button)
 {
-	if (this->mSelectedTool != 0)
+	if (this->mSelectedTool != 0 && this->mMenuFocus == false)
 		this->mSelectedTool->onMouseButtonUp(button);
+	this->mMenuFocus = false;
 }
 
 void MapViewer::onMouseMove(int x, int y)
@@ -429,7 +431,7 @@ void MapViewer::onMouseMove(int x, int y)
 			this->mStatus.setStatus("", 0);
 	}
 	
-	if (this->mSelectedTool != 0)
+	if (this->mSelectedTool != 0 && this->mMenuFocus == false)
 		this->mSelectedTool->onMouseMove(x, y);
 }
 

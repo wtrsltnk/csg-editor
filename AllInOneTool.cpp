@@ -114,21 +114,19 @@ void AllInOneTool::renderHitTestMinitature()
 bool AllInOneTool::onMouseButtonDown(Mouse::Button button)
 {
 	this->mHasMoved = false;
+	this->startx = MouseState::currentState().getMousePositionX();
+	this->starty = MouseState::currentState().getMousePositionY();
 	
 	if (this->mDiskMenu.mHoverType != HoverType::None)
 	{
 		this->mHasMoved = true;
 		this->mHoverType1 = this->mDiskMenu.mHoverType;
-		this->startx = MouseState::currentState().getMousePositionX();
-		this->starty = MouseState::currentState().getMousePositionY();
 	}
 	else
 	{
 		this->mHoverType1 = HoverType::None;
 		if (button == Mouse::Left)
 			this->mDragging1 = true;
-		this->startx = MouseState::currentState().getMousePositionX();
-		this->starty = MouseState::currentState().getMousePositionY();
 	}
 	return false;
 }
@@ -202,6 +200,14 @@ bool AllInOneTool::onMouseMove(int x, int y)
 		this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
 		this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
 		this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+	}
+	else if (this->mHoverType1 == HoverType::Scale)
+	{
+		float scale = (x - this->startx) / 100.0f;
+		this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
+	}
+	else if (this->mHoverType1 == HoverType::Rotate)
+	{
 	}
 	
 	this->startx = x;
