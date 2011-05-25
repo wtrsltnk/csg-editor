@@ -11,6 +11,8 @@
 #include "RotateTool.h"
 #include "CameraTool.h"
 #include "Status.h"
+#include "AllInOneTool.h"
+#include "SelectionTool.h"
 #include <GLee.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -48,6 +50,8 @@ bool MapViewer::initialize(int argc, char* argv[])
 	this->mTools.push_back(new MoveTool());
 	this->mTools.push_back(new ScaleTool());
 	this->mTools.push_back(new RotateTool());
+	this->mTools.push_back(new AllInOneTool());
+	this->mTools.push_back(new SelectionTool());
 
 	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
 		(*itr)->initialize(this);
@@ -166,10 +170,10 @@ void MapViewer::render(int time)
 		glRasterPos2d(project2D.x(), project2D.y());
 		glutBitmapString(GLUT_BITMAP_9_BY_15, (const unsigned char*)"Wouter");
 
-		glEnable(GL_TEXTURE_2D);
-		this->mDiskMenu.mPosition = project2D;
-		this->mDiskMenu.render(time);
-		glDisable(GL_TEXTURE_2D);
+//		glEnable(GL_TEXTURE_2D);
+//		this->mDiskMenu.mPosition = project2D;
+//		this->mDiskMenu.render(time);
+//		glDisable(GL_TEXTURE_2D);
 	}
 	
 	glMatrixMode(GL_PROJECTION);
@@ -420,49 +424,6 @@ void MapViewer::onMouseButtonDown(Mouse::Button button)
 	if (this->mSelectedTool != 0)
 		if (this->mSelectedTool->onMouseButtonDown(button) == true)
 			return;
-	
-	if (button == Mouse::Left)
-	{
-		if (this->mSelectedBrush != 0)
-		{
-			geo::Plane* plane = this->selectPlane(this->mSelectedBrush, MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-			if (plane == 0)
-			{
-				// Select Brush here
-				geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-				if (b != 0)
-				{
-					this->mSelectedBrush = b;
-					this->mSelectedPlane = 0;
-					this->mSelectionOrigin = this->mSelectedBrush->origin();
-				}
-			}
-			else
-			{
-				if (this->mSelectedPlane == plane)
-				{
-					this->mSelectedPlane = 0;
-					this->mSelectionOrigin = this->mSelectedBrush->origin();
-				}
-				else
-				{
-					this->mSelectedPlane = plane;
-					this->mSelectionOrigin = plane->average;
-				}
-			}
-		}
-		else
-		{
-			// Select Brush here
-			geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-			if (b != 0)
-			{
-				this->mSelectedBrush = b;
-				this->mSelectedPlane = 0;
-				this->mSelectionOrigin = this->mSelectedBrush->origin();
-			}
-		}
-	}
 }
 
 void MapViewer::onMouseButtonUp(Mouse::Button button)

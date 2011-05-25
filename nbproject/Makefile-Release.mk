@@ -35,8 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/ScaleTool.o \
+	${OBJECTDIR}/SelectionTool.o \
 	${OBJECTDIR}/Tool.o \
 	${OBJECTDIR}/RotateTool.o \
+	${OBJECTDIR}/AllInOneTool.o \
 	${OBJECTDIR}/MapViewer.o \
 	${OBJECTDIR}/DiskMenu.o \
 	${OBJECTDIR}/MoveTool.o \
@@ -75,6 +77,11 @@ ${OBJECTDIR}/ScaleTool.o: ScaleTool.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScaleTool.o ScaleTool.cpp
 
+${OBJECTDIR}/SelectionTool.o: SelectionTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/SelectionTool.o SelectionTool.cpp
+
 ${OBJECTDIR}/Tool.o: Tool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -84,6 +91,11 @@ ${OBJECTDIR}/RotateTool.o: RotateTool.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/RotateTool.o RotateTool.cpp
+
+${OBJECTDIR}/AllInOneTool.o: AllInOneTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/AllInOneTool.o AllInOneTool.cpp
 
 ${OBJECTDIR}/MapViewer.o: MapViewer.cpp 
 	${MKDIR} -p ${OBJECTDIR}

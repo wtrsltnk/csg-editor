@@ -16,6 +16,8 @@
       <itemPath>Status.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="Tools" projectFiles="true">
+      <itemPath>AllInOneTool.cpp</itemPath>
+      <itemPath>AllInOneTool.h</itemPath>
       <itemPath>CameraTool.cpp</itemPath>
       <itemPath>CameraTool.h</itemPath>
       <itemPath>MoveTool.cpp</itemPath>
@@ -24,6 +26,8 @@
       <itemPath>RotateTool.h</itemPath>
       <itemPath>ScaleTool.cpp</itemPath>
       <itemPath>ScaleTool.h</itemPath>
+      <itemPath>SelectionTool.cpp</itemPath>
+      <itemPath>SelectionTool.h</itemPath>
       <itemPath>Tool.cpp</itemPath>
       <itemPath>Tool.h</itemPath>
     </logicalFolder>
