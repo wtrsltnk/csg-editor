@@ -44,7 +44,6 @@ void CameraTool::prerender(int time)
 		this->mViewer->mCamera.moveLeft(speed);
 	if (KeyboardState::currentState().isKeyPressed(Key::d))
 		this->mViewer->mCamera.moveLeft(-speed);
-
 }
 
 void CameraTool::render(int time)

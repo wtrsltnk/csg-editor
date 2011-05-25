@@ -35,7 +35,8 @@ public:
 	
 	Vector3 mPosition;
 	int mSize;
-	int mHover;
+	int mHoverType;
+	float mOpacity;
 	Texture* mColors;
 	Texture* mMove;
 	Texture* mScale;

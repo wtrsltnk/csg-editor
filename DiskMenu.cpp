@@ -9,9 +9,10 @@
 #include <common/TextureLoader.h>
 #include <GL/freeglut.h>
 #include <stdio.h>
+#include <math.h>
 
 DiskMenu::DiskMenu()
-	: mSize(70), mHover(HoverType::None), mColors(0), mMove(0), mScale(0), mRotate(0)
+	: mSize(70), mHoverType(HoverType::None), mColors(0), mMove(0), mScale(0), mRotate(0), mOpacity(0.6f)
 {
 }
 
@@ -45,7 +46,7 @@ void DiskMenu::render(int time)
 	glPushMatrix();
 	glTranslatef(this->mPosition.x(), this->mPosition.y(), 5);
 	
-	glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
+	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
 	
 	this->mColors->use();
 	glBegin(GL_QUADS);
@@ -55,8 +56,8 @@ void DiskMenu::render(int time)
 	glTexCoord2f(0, 1); glVertex3f(-this->mSize,  mSize, 0.0f);
 	glEnd();
 	
-	glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
-	if (this->mHover == HoverType::Scale)
+	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
+	if (this->mHoverType == HoverType::Scale)
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	this->mScale->use();
 	glBegin(GL_QUADS);
@@ -66,8 +67,8 @@ void DiskMenu::render(int time)
 	glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
 	glEnd();
 	
-	glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
-	if (this->mHover == HoverType::Move)
+	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
+	if (this->mHoverType == HoverType::Move)
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	this->mMove->use();
 	glBegin(GL_QUADS);
@@ -77,8 +78,8 @@ void DiskMenu::render(int time)
 	glTexCoord2f(0, 1); glVertex3f(-this->mSize,  this->mSize, 0.0f);
 	glEnd();
 	
-	glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
-	if (this->mHover == HoverType::Rotate)
+	glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
+	if (this->mHoverType == HoverType::Rotate)
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	this->mRotate->use();
 	glBegin(GL_QUADS);
@@ -142,11 +143,19 @@ void DiskMenu::testHover(int mousex, int mousey)
 	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
 
 	if (pixel[0] >= 200 && pixel[1] == 0 && pixel[2] == 0)
-		this->mHover = HoverType::Move;
+		this->mHoverType = HoverType::Move;
 	else if (pixel[1] >= 200 && pixel[0] == 0 && pixel[2] == 0)
-		this->mHover = HoverType::Scale;
+		this->mHoverType = HoverType::Scale;
 	else if (pixel[2] >= 200 && pixel[1] == 0 && pixel[0] == 0)
-		this->mHover = HoverType::Rotate;
+		this->mHoverType = HoverType::Rotate;
 	else 
-		this->mHover = HoverType::None;
+		this->mHoverType = HoverType::None;
+	
+	// Determine opacity
+	Vector3 v(this->mPosition.x()-mousex, this->mPosition.y()-mousey, 0);
+	int x = viewport[2] - viewport[0];
+	int y = viewport[3] - viewport[1];
+	int maxviewport = sqrt(x*x+y*y);
+	this->mOpacity = 0.6f -  (1.0f / float(maxviewport)) * v.length();
+	if (this->mOpacity < 0.1f) this->mOpacity = 0.1f;
 }

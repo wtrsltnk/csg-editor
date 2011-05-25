@@ -63,8 +63,6 @@ bool MapViewer::initialize(int argc, char* argv[])
 	this->mStatus.mFont = new ui::Font();
 	this->mStatus.mFont->initializeFont("Ubuntu-R.ttf");
 	
-	this->mDiskMenu.initialize();
-	
 	return true;
 }
 
@@ -85,7 +83,6 @@ void MapViewer::resize(int w, int h)
 
 void MapViewer::render(int time)
 {
-	Vector3 project2D;
 	if (this->mSelectedTool != 0)
 		this->mSelectedTool->prerender(time);
 	
@@ -134,7 +131,7 @@ void MapViewer::render(int time)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		if (this->mSelectedTool != 0)
 			this->mSelectedTool->render(time);
-		this->getScreenPosition(this->mSelectionOrigin, project2D);
+		this->getScreenPosition(this->mSelectionOrigin, this->mSelectionProjectedOrigin);
 
 	}
 	glPopMatrix();
@@ -164,17 +161,6 @@ void MapViewer::render(int time)
 	glLoadIdentity();
 
 	this->mStatus.render(time);
-	
-	if (this->mSelectedBrush != 0)
-	{
-		glRasterPos2d(project2D.x(), project2D.y());
-		glutBitmapString(GLUT_BITMAP_9_BY_15, (const unsigned char*)"Wouter");
-
-//		glEnable(GL_TEXTURE_2D);
-//		this->mDiskMenu.mPosition = project2D;
-//		this->mDiskMenu.render(time);
-//		glDisable(GL_TEXTURE_2D);
-	}
 	
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -434,7 +420,6 @@ void MapViewer::onMouseButtonUp(Mouse::Button button)
 
 void MapViewer::onMouseMove(int x, int y)
 {
-	this->mDiskMenu.testHover(x, y);
 	if (this->mStatus.isStatusVisible() == false)
 	{
 		Tool* tool = this->testMenu(x, y);

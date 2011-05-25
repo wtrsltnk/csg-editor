@@ -9,6 +9,7 @@
 #define	ALLINONETOOL_H
 
 #include "Tool.h"
+#include "DiskMenu.h"
 
 class AllInOneTool : public Tool
 {
@@ -16,6 +17,8 @@ public:
 	AllInOneTool();
 	virtual ~AllInOneTool();
 
+	virtual bool initialize(MapViewer* viewer);
+	
 	virtual void select();
 	virtual void deselect();
 
@@ -29,6 +32,11 @@ public:
 	virtual bool onMouseMove(int x, int y);
 	
 private:
+	bool mHasMoved;
+	DiskMenu mDiskMenu;
+	bool mDragging1;
+	int mHoverType1;
+	int startx, starty;
 
 };
 
