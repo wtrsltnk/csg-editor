@@ -10,7 +10,6 @@
 
 #include "Tool.h"
 #include "Status.h"
-#include "DiskMenu.h"
 #include <GlutApplication.h>
 #include <common/camera.h>
 #include <geo/Scene.h>

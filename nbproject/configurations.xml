@@ -4,14 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>DiskMenu.h</itemPath>
       <itemPath>MapViewer.h</itemPath>
       <itemPath>Status.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>DiskMenu.cpp</itemPath>
       <itemPath>MapViewer.cpp</itemPath>
       <itemPath>Status.cpp</itemPath>
     </logicalFolder>

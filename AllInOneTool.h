@@ -9,7 +9,18 @@
 #define	ALLINONETOOL_H
 
 #include "Tool.h"
-#include "DiskMenu.h"
+#include <common/Texture.h>
+
+namespace HoverType
+{
+	enum Types
+	{
+		None = 0,
+		Move, 
+		Scale, 
+		Rotate
+	};
+}
 
 class AllInOneTool : public Tool
 {
@@ -31,13 +42,21 @@ public:
 	virtual bool onMouseButtonUp(Mouse::Button button);
 	virtual bool onMouseMove(int x, int y);
 	
+	void testHover(int mousex, int mousey);
 private:
 	bool mHasMoved;
-	DiskMenu mDiskMenu;
 	bool mDragging1;
 	int mHoverType1;
 	int startx, starty;
 
+	Vector3 mPosition;
+	int mSize;
+	int mHoverType;
+	float mOpacity;
+	Texture* mColors;
+	Texture* mMove;
+	Texture* mScale;
+	Texture* mRotate;
 };
 
 #endif	/* ALLINONETOOL_H */
