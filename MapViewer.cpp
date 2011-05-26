@@ -186,7 +186,14 @@ void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 	for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
 	{
 		glBegin(GL_POLYGON);
-		glNormal3fv((*p).mNormal);
+		float add = -0.09f;
+		if (fabs((*p).mNormal.x()) > fabs((*p).mNormal.y()) && fabs((*p).mNormal.x()) > fabs((*p).mNormal.z()))
+			add = -0.03f;
+		else if (fabs((*p).mNormal.y()) > fabs((*p).mNormal.x()) && fabs((*p).mNormal.y()) > fabs((*p).mNormal.z()))
+			add = 0.06f;
+		else if (fabs((*p).mNormal.z()) > fabs((*p).mNormal.x()) && fabs((*p).mNormal.z()) > fabs((*p).mNormal.y()))
+			add = 0.0f;
+		glColor3f(brush->mColor[0] + add, brush->mColor[1] + add, brush->mColor[2] + add);
 		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
 			glVertex3fv(brush->mVertices[(*itr)]);
 		glEnd();
