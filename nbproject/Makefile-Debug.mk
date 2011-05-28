@@ -34,14 +34,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/ScaleTool.o \
-	${OBJECTDIR}/SelectionTool.o \
 	${OBJECTDIR}/Tool.o \
-	${OBJECTDIR}/RotateTool.o \
 	${OBJECTDIR}/AllInOneTool.o \
 	${OBJECTDIR}/MapViewer.o \
-	${OBJECTDIR}/MoveTool.o \
-	${OBJECTDIR}/CameraTool.o \
 	${OBJECTDIR}/Status.o
 
 
@@ -75,25 +70,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/ScaleTool.o: ScaleTool.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScaleTool.o ScaleTool.cpp
-
-${OBJECTDIR}/SelectionTool.o: SelectionTool.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/SelectionTool.o SelectionTool.cpp
-
 ${OBJECTDIR}/Tool.o: Tool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/Tool.o Tool.cpp
-
-${OBJECTDIR}/RotateTool.o: RotateTool.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/RotateTool.o RotateTool.cpp
 
 ${OBJECTDIR}/AllInOneTool.o: AllInOneTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -104,16 +84,6 @@ ${OBJECTDIR}/MapViewer.o: MapViewer.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/MapViewer.o MapViewer.cpp
-
-${OBJECTDIR}/MoveTool.o: MoveTool.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/MoveTool.o MoveTool.cpp
-
-${OBJECTDIR}/CameraTool.o: CameraTool.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/CameraTool.o CameraTool.cpp
 
 ${OBJECTDIR}/Status.o: Status.cpp 
 	${MKDIR} -p ${OBJECTDIR}

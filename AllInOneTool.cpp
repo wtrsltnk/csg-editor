@@ -50,16 +50,16 @@ void AllInOneTool::deselect()
 void AllInOneTool::prerender(int time)
 {
 	static int lastTime = 0;
-	float speed = 5.0f * ((time - lastTime) / 10.0f);
+	float speed = 5.0f * ((time - lastTime));
 	lastTime = time;
 
-	if (KeyboardState::currentState().isKeyPressed(Key::w))
+	if (KeyboardState::currentState().isKeyPressed(Key::W))
 		this->mViewer->mCamera.moveForward(speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::s))
+	if (KeyboardState::currentState().isKeyPressed(Key::S))
 		this->mViewer->mCamera.moveForward(-speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::a))
+	if (KeyboardState::currentState().isKeyPressed(Key::A))
 		this->mViewer->mCamera.moveLeft(speed);
-	if (KeyboardState::currentState().isKeyPressed(Key::d))
+	if (KeyboardState::currentState().isKeyPressed(Key::D))
 		this->mViewer->mCamera.moveLeft(-speed);
 }
 

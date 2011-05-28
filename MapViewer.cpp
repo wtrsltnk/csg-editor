@@ -6,13 +6,8 @@
  */
 
 #include "MapViewer.h"
-#include "MoveTool.h"
-#include "ScaleTool.h"
-#include "RotateTool.h"
-#include "CameraTool.h"
 #include "Status.h"
 #include "AllInOneTool.h"
-#include "SelectionTool.h"
 #include <GLee.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -83,7 +78,7 @@ void MapViewer::onResize(int w, int h)
 void MapViewer::onIdle(const GameTime* time)
 {
 	if (this->mSelectedTool != 0)
-		this->mSelectedTool->prerender(0);
+		this->mSelectedTool->prerender(time->getTotalTime() * 100.0f);
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
