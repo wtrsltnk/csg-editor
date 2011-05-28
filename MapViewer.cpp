@@ -40,11 +40,6 @@ bool MapViewer::onInitializeGl()
 	loader.load("dust_001.map", &this->mScene);
 	
 	this->mTools.push_back(new AllInOneTool());
-//	this->mTools.push_back(new CameraTool());
-//	this->mTools.push_back(new MoveTool());
-//	this->mTools.push_back(new ScaleTool());
-//	this->mTools.push_back(new RotateTool());
-//	this->mTools.push_back(new SelectionTool());
 
 	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
 		(*itr)->initialize(this);
@@ -99,13 +94,11 @@ void MapViewer::onIdle(const GameTime* time)
 		glDisable(GL_DEPTH_TEST);
 		if (this->mSelectedPlane != 0)
 		{
-//			glEnable(GL_BLEND);
 			glColor4f(0, 0, 1, 0.5f);
 			glBegin(GL_POLYGON);
 			for(std::vector<int>::iterator itr = this->mSelectedPlane->mIndices.begin(); itr != this->mSelectedPlane->mIndices.end(); ++itr)
 				glVertex3fv(this->mSelectedBrush->mVertices[(*itr)]);
 			glEnd();
-//			glDisable(GL_BLEND);
 		}
 		glLineWidth(1);
 		this->renderBoundingBox(this->mSelectedBrush->mMins, this->mSelectedBrush->mMaxs, bb);
