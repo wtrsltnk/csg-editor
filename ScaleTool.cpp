@@ -33,7 +33,7 @@ void ScaleTool::render(int time)
 	glPushMatrix();
 	glTranslatef(this->mViewer->mSelectionOrigin.x(), this->mViewer->mSelectionOrigin.y(), this->mViewer->mSelectionOrigin.z());
 	glScalef(10.0f, 10.0f, 10.0f);
-	glutWireSphere(1, 8, 8);
+//	glutWireSphere(1, 8, 8);
 	glPopMatrix();
 }
 
@@ -42,7 +42,7 @@ void ScaleTool::renderHitTest()
 	glPushMatrix();
 	glTranslatef(this->mViewer->mSelectionOrigin.x(), this->mViewer->mSelectionOrigin.y(), this->mViewer->mSelectionOrigin.z());
 	glScalef(10.0f, 10.0f, 10.0f);
-	glutSolidSphere(1, 8, 8);
+//	glutSolidSphere(1, 8, 8);
 	glPopMatrix();
 }
 
@@ -64,7 +64,7 @@ void ScaleTool::renderMinitature(bool selected)
 	glEnd();
 	glRotatef(90, 1, 0, 0);
 	glColor3f(1, 0, 0);
-	glutWireSphere(0.8f, 8, 8);
+//	glutWireSphere(0.8f, 8, 8);
 	glPopMatrix();
 }
 

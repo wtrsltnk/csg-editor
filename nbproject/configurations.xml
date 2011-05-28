@@ -51,26 +51,50 @@
       <compileType>
         <ccTool>
           <incDir>
-            <pElem>../GuiProject</pElem>
+            <pElem>../Context/Context</pElem>
+            <pElem>../Context/Geometry</pElem>
+            <pElem>../Context/Common</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibLibItem>GLU</linkerLibLibItem>
-            <linkerLibLibItem>GL</linkerLibLibItem>
-            <linkerLibLibItem>glut</linkerLibLibItem>
             <linkerLibProjectItem>
-              <makeArtifact PL="../GuiProject"
-                            CT="3"
-                            CN="libDebug"
-                            AC="true"
+              <makeArtifact PL="../Context/Common"
+                            CT="2"
+                            CN="linuxDebug"
+                            AC="false"
                             BL="true"
-                            WD="../GuiProject"
-                            BC="${MAKE}  -f Makefile CONF=libDebug"
-                            CC="${MAKE}  -f Makefile CONF=libDebug clean"
-                            OP="dist/libDebug/GNU-Linux-x86/libguiproject.a">
+                            WD="../Context/Common"
+                            BC="${MAKE}  -f Makefile CONF=linuxDebug"
+                            CC="${MAKE}  -f Makefile CONF=linuxDebug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libCommon.so">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Context"
+                            CT="2"
+                            CN="linuxDebug"
+                            AC="false"
+                            BL="true"
+                            WD="../Context/Context"
+                            BC="${MAKE}  -f Makefile CONF=linuxDebug"
+                            CC="${MAKE}  -f Makefile CONF=linuxDebug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libContext.so">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Geometry"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../Context/Geometry"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libGeometry.so">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibLibItem>GLU</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

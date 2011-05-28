@@ -38,7 +38,7 @@ void SelectionTool::renderMinitature(bool selected)
 	glColor3f(0.9f, 0.6f, 0);
 	glTranslatef(-0.2f, 0, 0);
 	glRotatef(75, 0, 1, 0);
-	glutWireOctahedron();
+//	glutWireOctahedron();
 	glPopMatrix();
 }
 

@@ -9,7 +9,7 @@
 #define	ALLINONETOOL_H
 
 #include "Tool.h"
-#include <common/Texture.h>
+#include <Texture.h>
 
 namespace HoverType
 {

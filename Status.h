@@ -8,7 +8,7 @@
 #ifndef STATUS_H
 #define	STATUS_H
 
-#include <ui/uiFont.h>
+#include <uiFont.h>
 
 class Status
 {

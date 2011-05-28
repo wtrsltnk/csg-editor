@@ -10,9 +10,9 @@
 
 #include "Tool.h"
 #include "Status.h"
-#include <GlutApplication.h>
-#include <common/camera.h>
-#include <geo/Scene.h>
+#include <GlContext.h>
+#include <Camera.h>
+#include <Scene.h>
 
 namespace EditMode
 {
@@ -25,20 +25,21 @@ namespace EditMode
 	};
 }
 
-class MapViewer : public GlutApplication
+class MapViewer : public GlContext
 {
 public:
 	MapViewer();
 	virtual ~MapViewer();
 
-	virtual bool initialize(int argc, char* argv[]);
-	virtual void resize(int w, int h);
+	virtual bool onInitializeGl();
+	virtual void onDestroyGl() { }
+	virtual void onResize(int w, int h);
 	virtual void onKeyDown(Key::Code key);
 	virtual void onKeyUp(Key::Code key);
 	virtual void onMouseButtonDown(Mouse::Button button);
 	virtual void onMouseButtonUp(Mouse::Button button);
 	virtual void onMouseMove(int x, int y);
-	virtual void render(int time);
+	virtual void onIdle(const GameTime* time);
 
 	void renderBrush(geo::Brush* brush, float lineColor[]);
 	void renderBoundingBox(const float mins[], const float maxs[], float color[]);

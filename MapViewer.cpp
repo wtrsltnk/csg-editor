@@ -16,14 +16,21 @@
 #include <GLee.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <geo/MapLoader.h>
+#include <MapLoader.h>
+#include <GameTime.h>
 #include <stdio.h>
-#include <GL/freeglut.h>
 
-GlutApplication* gApplication = new MapViewer();
+int main()
+{
+	MapViewer v;
+	
+	if (v.create(3, 0))
+		return v.startGameloop();
+	return 0;
+}
 
 MapViewer::MapViewer()
-	: GlutApplication("Map Viewer"), mSelectedBrush(0), mSelectedPlane(0), mSelectedTool(0)
+	: GlContext(), mSelectedBrush(0), mSelectedPlane(0), mSelectedTool(0)
 {
 }
 
@@ -31,18 +38,11 @@ MapViewer::~MapViewer()
 {
 }
 
-bool MapViewer::initialize(int argc, char* argv[])
+bool MapViewer::onInitializeGl()
 {
 	geo::MapLoader loader;
 
-	if (argc > 1)
-	{
-		loader.load(argv[1], &this->mScene);
-	}
-	else
-	{
-		loader.load("dust_001.map", &this->mScene);
-	}
+	loader.load("dust_001.map", &this->mScene);
 	
 	this->mTools.push_back(new AllInOneTool());
 //	this->mTools.push_back(new CameraTool());
@@ -65,7 +65,7 @@ bool MapViewer::initialize(int argc, char* argv[])
 	return true;
 }
 
-void MapViewer::resize(int w, int h)
+void MapViewer::onResize(int w, int h)
 {
 	if (h == 0) h = 1;
 	float aspect = 1.0f * (float(w)/float(h));
@@ -80,10 +80,10 @@ void MapViewer::resize(int w, int h)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void MapViewer::render(int time)
+void MapViewer::onIdle(const GameTime* time)
 {
 	if (this->mSelectedTool != 0)
-		this->mSelectedTool->prerender(time);
+		this->mSelectedTool->prerender(0);
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
@@ -127,7 +127,7 @@ void MapViewer::render(int time)
 		}
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		if (this->mSelectedTool != 0)
-			this->mSelectedTool->render(time);
+			this->mSelectedTool->render(0);
 		this->getScreenPosition(this->mSelectionOrigin, this->mSelectionProjectedOrigin);
 	}
 	glPopMatrix();
@@ -136,12 +136,12 @@ void MapViewer::render(int time)
 	int x = 0;
 	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
 	{
-		glViewport(0, height-70-x*50, width/10, height/10);
+		glViewport(0, this->height()-70-x*50, this->width()/10, this->height()/10);
 		(*itr)->renderMinitature((*itr) == this->mSelectedTool);
 		x++;
 	}
 	
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, this->width(), this->height());
 
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -156,7 +156,7 @@ void MapViewer::render(int time)
 	glPushMatrix();
 	glLoadIdentity();
 
-	this->mStatus.render(time);
+	this->mStatus.render(time->getTotalTime());
 	
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -324,7 +324,7 @@ Tool* MapViewer::testMenu(int mousex, int mousey)
 	int x = 0;
 	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
 	{
-		glViewport(0, height-70-x*50, width/10, height/10);
+		glViewport(0, this->height()-70-x*50, this->width()/10, this->height()/10);
 		glColor3f(x/255.0f, 0, 0);
 		(*itr)->renderHitTestMinitature();
 		x++;
@@ -334,7 +334,7 @@ Tool* MapViewer::testMenu(int mousex, int mousey)
 	glReadBuffer(GL_BACK);
 	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
 
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, this->width(), this->height());
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	if (pixel[0] == 255 && pixel[1] == 255 && pixel[2] == 255)
@@ -373,7 +373,7 @@ void MapViewer::onKeyDown(Key::Code key)
 	{
 		if (key == Key::Escape)
 		{
-			this->quit();
+			this->stopGameloop();
 		}
 		else
 		{

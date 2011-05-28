@@ -8,8 +8,8 @@
 #ifndef TOOL_H
 #define	TOOL_H
 
-#include <userInput.h>
-#include <common/camera.h>
+#include <UserInput.h>
+#include <Camera.h>
 
 class MapViewer;
 

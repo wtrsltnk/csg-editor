@@ -42,7 +42,7 @@ void MoveTool::render(int time)
 	glPushMatrix();
 	glTranslatef(this->mViewer->mSelectionOrigin.x(), this->mViewer->mSelectionOrigin.y(), this->mViewer->mSelectionOrigin.z());
 	glScalef(10.0f, 10.0f, 10.0f);
-	glutWireCube(1);
+//	glutWireCube(1);
 	glPopMatrix();
 }
 
@@ -51,7 +51,7 @@ void MoveTool::renderHitTest()
 	glPushMatrix();
 	glTranslatef(this->mViewer->mSelectionOrigin.x(), this->mViewer->mSelectionOrigin.y(), this->mViewer->mSelectionOrigin.z());
 	glScalef(10.0f, 10.0f, 10.0f);
-	glutSolidCube(1);
+//	glutSolidCube(1);
 	glPopMatrix();
 }
 
@@ -73,7 +73,7 @@ void MoveTool::renderMinitature(bool selected)
 	glEnd();
 	glDisable(GL_BLEND);
 	glColor3f(0, 1, 0);
-	glutWireCube(1.2);
+//	glutWireCube(1.2);
 	glPopMatrix();
 }
 

@@ -33,7 +33,7 @@ void RotateTool::render(int time)
 	glPushMatrix();
 	glTranslatef(this->mViewer->mSelectionOrigin.x(), this->mViewer->mSelectionOrigin.y(), this->mViewer->mSelectionOrigin.z());
 	glScalef(10.0f, 10.0f, 10.0f);
-	glutWireTeapot(0.6f);
+//	glutWireTeapot(0.6f);
 	glPopMatrix();
 }
 
@@ -42,7 +42,7 @@ void RotateTool::renderHitTest()
 	glPushMatrix();
 	glTranslatef(this->mViewer->mSelectionOrigin.x(), this->mViewer->mSelectionOrigin.y(), this->mViewer->mSelectionOrigin.z());
 	glScalef(10.0f, 10.0f, 10.0f);
-	glutSolidTeapot(0.6f);
+//	glutSolidTeapot(0.6f);
 	glPopMatrix();
 }
 
@@ -63,7 +63,7 @@ void RotateTool::renderMinitature(bool selected)
 	glVertex3f(-1.0f,  1.0f,  0.0f);
 	glEnd();
 	glColor3f(0, 0, 1.0f);
-	glutWireTeapot(0.6f);
+//	glutWireTeapot(0.6f);
 	glPopMatrix();
 }
 

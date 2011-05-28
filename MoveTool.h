@@ -9,7 +9,7 @@
 #define	MOVETOOL_H
 
 #include "Tool.h"
-#include <common/vector3.h>
+#include <Vector3.h>
 
 class MoveTool : public Tool
 {

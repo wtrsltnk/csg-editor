@@ -11,6 +11,9 @@
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects>
                 <make-dep-project>../GuiProject</make-dep-project>
+                <make-dep-project>../Context/Geometry</make-dep-project>
+                <make-dep-project>../Context/Common</make-dep-project>
+                <make-dep-project>../Context/Context</make-dep-project>
             </make-dep-projects>
             <sourceRootList/>
             <confList>

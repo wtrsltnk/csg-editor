@@ -59,13 +59,17 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lGLU -lGL -lglut ../GuiProject/dist/libDebug/GNU-Linux-x86/libguiproject.a
+LDLIBSOPTIONS=-Wl,-rpath ../Context/Common/dist/linuxDebug/GNU-Linux-x86 -L../Context/Common/dist/linuxDebug/GNU-Linux-x86 -lCommon -Wl,-rpath ../Context/Context/dist/linuxDebug/GNU-Linux-x86 -L../Context/Context/dist/linuxDebug/GNU-Linux-x86 -lContext -Wl,-rpath ../Context/Geometry/dist/Debug/GNU-Linux-x86 -L../Context/Geometry/dist/Debug/GNU-Linux-x86 -lGeometry -lGLU
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../GuiProject/dist/libDebug/GNU-Linux-x86/libguiproject.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../Context/Common/dist/linuxDebug/GNU-Linux-x86/libCommon.so
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../Context/Context/dist/linuxDebug/GNU-Linux-x86/libContext.so
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../Context/Geometry/dist/Debug/GNU-Linux-x86/libGeometry.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -74,51 +78,53 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ${OBJECTFILES}
 ${OBJECTDIR}/ScaleTool.o: ScaleTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScaleTool.o ScaleTool.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScaleTool.o ScaleTool.cpp
 
 ${OBJECTDIR}/SelectionTool.o: SelectionTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/SelectionTool.o SelectionTool.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/SelectionTool.o SelectionTool.cpp
 
 ${OBJECTDIR}/Tool.o: Tool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/Tool.o Tool.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/Tool.o Tool.cpp
 
 ${OBJECTDIR}/RotateTool.o: RotateTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/RotateTool.o RotateTool.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/RotateTool.o RotateTool.cpp
 
 ${OBJECTDIR}/AllInOneTool.o: AllInOneTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/AllInOneTool.o AllInOneTool.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/AllInOneTool.o AllInOneTool.cpp
 
 ${OBJECTDIR}/MapViewer.o: MapViewer.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MapViewer.o MapViewer.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/MapViewer.o MapViewer.cpp
 
 ${OBJECTDIR}/MoveTool.o: MoveTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/MoveTool.o MoveTool.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/MoveTool.o MoveTool.cpp
 
 ${OBJECTDIR}/CameraTool.o: CameraTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/CameraTool.o CameraTool.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/CameraTool.o CameraTool.cpp
 
 ${OBJECTDIR}/Status.o: Status.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../GuiProject -MMD -MP -MF $@.d -o ${OBJECTDIR}/Status.o Status.cpp
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/Status.o Status.cpp
 
 # Subprojects
 .build-subprojects:
-	cd ../GuiProject && ${MAKE}  -f Makefile CONF=libDebug
+	cd ../Context/Common && ${MAKE}  -f Makefile CONF=linuxDebug
+	cd ../Context/Context && ${MAKE}  -f Makefile CONF=linuxDebug
+	cd ../Context/Geometry && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -127,7 +133,9 @@ ${OBJECTDIR}/Status.o: Status.cpp
 
 # Subprojects
 .clean-subprojects:
-	cd ../GuiProject && ${MAKE}  -f Makefile CONF=libDebug clean
+	cd ../Context/Common && ${MAKE}  -f Makefile CONF=linuxDebug clean
+	cd ../Context/Context && ${MAKE}  -f Makefile CONF=linuxDebug clean
+	cd ../Context/Geometry && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl
