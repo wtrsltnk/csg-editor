@@ -101,7 +101,7 @@ void MapViewer::onIdle(const GameTime* time)
 			glEnd();
 		}
 		glLineWidth(1);
-		this->renderBoundingBox(this->mSelectedBrush->mMins, this->mSelectedBrush->mMaxs, bb);
+//		this->renderBoundingBox(this->mSelectedBrush->mMins, this->mSelectedBrush->mMaxs, bb);
 		glDisable(GL_DEPTH_TEST);
 		glColor4f(1.0f, 1.0f, 1.0f, 0.9f);
 		glLineWidth(1);
@@ -114,9 +114,9 @@ void MapViewer::onIdle(const GameTime* time)
 			glEnd();
 		}
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		this->getScreenPosition(this->mSelectionOrigin, this->mSelectionProjectedOrigin);
 		if (this->mSelectedTool != 0)
 			this->mSelectedTool->render(0);
-		this->getScreenPosition(this->mSelectionOrigin, this->mSelectionProjectedOrigin);
 	}
 	glPopMatrix();
 	

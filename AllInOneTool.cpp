@@ -276,25 +276,48 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	}
 	else if (this->mHoverType1 == HoverType::Move)
 	{
-		Vector3 left = this->mViewer->mCamera.left().unit() * (x-mPreviousX);
-		Vector3 up = this->mViewer->mCamera.up().unit() * (y-mPreviousY);
-		this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
-		this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
-		this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
-	
+		if (this->mViewer->mSelectedPlane != 0)
+		{
+			this->mViewer->mSelectedPlane->mDistance += x-mPreviousX;
+			this->mViewer->mSelectedBrush->updateVertices();
+			this->mViewer->mSelectionOrigin = this->mViewer->mSelectedPlane->average;
+		}
+		else
+		{
+			Vector3 left = this->mViewer->mCamera.left().unit() * (x-mPreviousX);
+			Vector3 up = this->mViewer->mCamera.up().unit() * (y-mPreviousY);
+			this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
+			this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
+			this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+		}
 		this->mPreviousX = x;
 		this->mPreviousY = y;
 	}
 	else if (this->mHoverType1 == HoverType::Scale)
 	{
-		float scale = (x - this->mPreviousX) / 100.0f;
-		this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
+		if (this->mViewer->mSelectedPlane != 0)
+		{
+			
+		}
+		else
+		{
+			float scale = (x - this->mPreviousX) / 100.0f;
+			this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
+		}
 	
 		this->mPreviousX = x;
 		this->mPreviousY = y;
 	}
 	else if (this->mHoverType1 == HoverType::Rotate)
 	{
+		if (this->mViewer->mSelectedPlane != 0)
+		{
+			
+		}
+		else
+		{
+			
+		}
 	}
 	
 	return true;
