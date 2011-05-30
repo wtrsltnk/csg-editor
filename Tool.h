@@ -24,6 +24,7 @@ public:
 
 	virtual void prerender(int time) { }
 	virtual void render(int time) { }
+	virtual void render2D(int time) { }
 	virtual void renderHitTest() { }
 	virtual void renderMinitature(bool selected) { }
 	virtual void renderHitTestMinitature() { }

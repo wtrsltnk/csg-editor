@@ -9,6 +9,9 @@
 #include "MapViewer.h"
 #include <TextureLoader.h>
 #include <GLee.h>
+#include <iostream>
+
+AllInOneTool::Config AllInOneTool::sConfig;
 
 AllInOneTool::AllInOneTool()
 	: Tool("All-in-One tool", Key::B), mHasMoved(false),
@@ -69,13 +72,19 @@ void AllInOneTool::render(int time)
 	{
 		glPushMatrix();
 		glTranslatef(
-				this->mViewer->mSelectionOrigin.x(), 
-				this->mViewer->mSelectionOrigin.y(), 
-				this->mViewer->mSelectionOrigin.z()
+				this->mInitialPosition.x(), 
+				this->mInitialPosition.y(), 
+				this->mInitialPosition.z()
 				);
 		Tool::renderGrid(32, 20, this->mViewer->mCamera);
 		glPopMatrix();
-		
+	}
+}
+
+void AllInOneTool::render2D(int time)
+{
+	if (this->mViewer->mSelectedBrush != 0)
+	{
 		if (this->mViewer->mSelectionProjectedOrigin.z() < 1.0f)
 		{
 			GLint viewport[4];
@@ -94,6 +103,7 @@ void AllInOneTool::render(int time)
 			glEnable(GL_TEXTURE_2D);
 			this->mPosition = this->mViewer->mSelectionProjectedOrigin;
 			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glDisable(GL_DEPTH_TEST);
 			glPushMatrix();
 			glTranslatef(this->mPosition.x(), this->mPosition.y(), 5);
@@ -109,7 +119,7 @@ void AllInOneTool::render(int time)
 			glEnd();
 
 			glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
-			if (this->mHoverType == HoverType::Scale)
+			if (this->mHoverType == HoverType::Scale && this->mViewer->mSelectedPlane == 0)
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			this->mScale->use();
 			glBegin(GL_QUADS);
@@ -152,48 +162,12 @@ void AllInOneTool::render(int time)
 	}
 }
 
-void AllInOneTool::renderMinitature(bool selected)
-{
-	glPushMatrix();
-	glTranslatef(0, 0, -3);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	if (selected)
-		glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
-	else
-		glColor4f(1, 1, 1, 0.2f);
-	glBegin(GL_QUADS);
-	glVertex3f(-1.0f, -1.0f,  0.0f);
-	glVertex3f( 1.0f, -1.0f,  0.0f);
-	glVertex3f( 1.0f,  1.0f,  0.0f);
-	glVertex3f(-1.0f,  1.0f,  0.0f);
-	glEnd();
-	glDisable(GL_BLEND);
-	glColor3f(0.9f, 0.6f, 0);
-	glTranslatef(-0.2f, 0, 0);
-	glRotatef(75, 0, 1, 0);
-//	glutWireRhombicDodecahedron();
-	glPopMatrix();
-}
-
-void AllInOneTool::renderHitTestMinitature()
-{
-	glPushMatrix();
-	glTranslatef(0, 0, -3);
-	glBegin(GL_QUADS);
-	glVertex3f(-1.0f, -1.0f,  0.0f);
-	glVertex3f( 1.0f, -1.0f,  0.0f);
-	glVertex3f( 1.0f,  1.0f,  0.0f);
-	glVertex3f(-1.0f,  1.0f,  0.0f);
-	glEnd();
-	glPopMatrix();
-}
-
 bool AllInOneTool::onMouseButtonDown(Mouse::Button button)
 {
 	this->mHasMoved = false;
 	this->mStartX = this->mPreviousX = MouseState::currentState().getMousePositionX();
 	this->mStartY = this->mPreviousY = MouseState::currentState().getMousePositionY();
+	this->mInitialPosition = this->mViewer->mSelectionOrigin;
 	
 	if (this->mHoverType != 0/*HoverType::None*/)
 	{
@@ -211,40 +185,40 @@ bool AllInOneTool::onMouseButtonDown(Mouse::Button button)
 
 bool AllInOneTool::onMouseButtonUp(Mouse::Button button)
 {
-	this->mDragging1 = false;
+	this->mDragging1 = false; 
 	this->mHoverType1 = 0/*HoverType::None*/;
 	
 	if (button == Mouse::Left && (Vector3(this->mStartX, this->mStartY, 0)-Vector3(this->mPreviousX, this->mPreviousY, 0)).length() < 5)
 	{
-		if (this->mViewer->mSelectedBrush != 0)
-		{
-			geo::Plane* plane = this->mViewer->selectPlane(this->mViewer->mSelectedBrush, MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-			if (plane == 0)
-			{
-				// Select Brush here
-				geo::Brush* b = this->mViewer->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-				if (b != 0)
-				{
-					this->mViewer->mSelectedBrush = b;
-					this->mViewer->mSelectedPlane = 0;
-					this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
-				}
-			}
-			else
-			{
-				if (this->mViewer->mSelectedPlane == plane)
-				{
-					this->mViewer->mSelectedPlane = 0;
-					this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
-				}
-				else
-				{
-					this->mViewer->mSelectedPlane = plane;
-					this->mViewer->mSelectionOrigin = plane->average;
-				}
-			}
-		}
-		else
+//		if (this->mViewer->mSelectedBrush != 0)
+//		{
+//			geo::Plane* plane = this->mViewer->selectPlane(this->mViewer->mSelectedBrush, MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+//			if (plane == 0)
+//			{
+//				// Select Brush here
+//				geo::Brush* b = this->mViewer->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+//				if (b != 0)
+//				{
+//					this->mViewer->mSelectedBrush = b;
+//					this->mViewer->mSelectedPlane = 0;
+//					this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+//				}
+//			}
+//			else
+//			{
+//				if (this->mViewer->mSelectedPlane == plane)
+//				{
+//					this->mViewer->mSelectedPlane = 0;
+//					this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+//				}
+//				else
+//				{
+//					this->mViewer->mSelectedPlane = plane;
+//					this->mViewer->mSelectionOrigin = plane->average;
+//				}
+//			}
+//		}
+//		else
 		{
 			// Select Brush here
 			geo::Brush* b = this->mViewer->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
@@ -256,6 +230,8 @@ bool AllInOneTool::onMouseButtonUp(Mouse::Button button)
 			}
 		}
 	}
+	if (this->mViewer->mSelectedBrush != 0)
+		this->mInitialPosition = this->mViewer->mSelectionOrigin;
 	return false;
 }
 
@@ -276,48 +252,43 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	}
 	else if (this->mHoverType1 == HoverType::Move)
 	{
-		if (this->mViewer->mSelectedPlane != 0)
+		Vector3 left = Vector3(x-this->mPreviousX, 0, 0);//this->mViewer->mCamera.left().unit() * (x-mPreviousX);
+		Vector3 up = Vector3(0, y-this->mPreviousY, 0);//this->mViewer->mCamera.up().unit() * (y-mPreviousY);
+		
+		if (AllInOneTool::sConfig.mUseGrid == false)
 		{
-			this->mViewer->mSelectedPlane->mDistance += x-mPreviousX;
-			this->mViewer->mSelectedBrush->updateVertices();
-			this->mViewer->mSelectionOrigin = this->mViewer->mSelectedPlane->average;
+			left = this->mViewer->mCamera.left().unit() * (x-mPreviousX);
+			up = this->mViewer->mCamera.up().unit() * (y-mPreviousY);
 		}
-		else
+		else if (fabs(this->mViewer->mCamera.forward().x()) > fabs(mViewer->mCamera.forward().z()) && 
+				fabs(mViewer->mCamera.forward().x()) > fabs(mViewer->mCamera.forward().y()))
 		{
-			Vector3 left = this->mViewer->mCamera.left().unit() * (x-mPreviousX);
-			Vector3 up = this->mViewer->mCamera.up().unit() * (y-mPreviousY);
-			this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
-			this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
-			this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+			left = Vector3(0, this->mPreviousX-x, 0);
+			up = Vector3(0, 0, y-this->mPreviousY);
 		}
+		else if (fabs(mViewer->mCamera.forward().y()) > fabs(mViewer->mCamera.forward().z()) && 
+				fabs(mViewer->mCamera.forward().y()) > fabs(mViewer->mCamera.forward().x()))
+		{
+			left = Vector3(x-this->mPreviousX, 0, 0);
+			up = Vector3(0, 0, y-this->mPreviousY);
+		}
+		this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
+		this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
+		this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+		
 		this->mPreviousX = x;
 		this->mPreviousY = y;
 	}
 	else if (this->mHoverType1 == HoverType::Scale)
 	{
-		if (this->mViewer->mSelectedPlane != 0)
-		{
-			
-		}
-		else
-		{
-			float scale = (x - this->mPreviousX) / 100.0f;
-			this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
-		}
-	
+		float scale = (x - this->mPreviousX) / 100.0f;
+		this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
+		
 		this->mPreviousX = x;
 		this->mPreviousY = y;
 	}
 	else if (this->mHoverType1 == HoverType::Rotate)
 	{
-		if (this->mViewer->mSelectedPlane != 0)
-		{
-			
-		}
-		else
-		{
-			
-		}
 	}
 	
 	return true;

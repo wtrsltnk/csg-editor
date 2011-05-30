@@ -25,6 +25,16 @@ namespace HoverType
 class AllInOneTool : public Tool
 {
 public:
+	class Config
+	{
+	public:
+		Config() : mUseGrid(true) { }
+		
+		bool mUseGrid;
+		
+	};
+	static Config sConfig;
+public:
 	AllInOneTool();
 	virtual ~AllInOneTool();
 
@@ -35,8 +45,7 @@ public:
 
 	virtual void prerender(int time);
 	virtual void render(int time);
-	virtual void renderMinitature(bool selected);
-	virtual void renderHitTestMinitature();
+	virtual void render2D(int time);
 	
 	virtual bool onMouseButtonDown(Mouse::Button button);
 	virtual bool onMouseButtonUp(Mouse::Button button);
@@ -49,6 +58,7 @@ private:
 	int mHoverType1;
 	int mPreviousX, mPreviousY;
 	int mStartX, mStartY;
+	Vector3 mInitialPosition;
 
 	Vector3 mPosition;
 	int mSize;

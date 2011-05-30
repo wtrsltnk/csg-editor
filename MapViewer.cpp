@@ -82,7 +82,6 @@ void MapViewer::onIdle(const GameTime* time)
 	this->mCamera.update();
 
 	float lineColor[] = { -1, 1, 1, 1.0f };
-	float bb[] = { 0.0f, 1.0f, 0.0f, 0.5f };
 	glEnable(GL_DEPTH_TEST);
 	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
 	{
@@ -102,8 +101,6 @@ void MapViewer::onIdle(const GameTime* time)
 			glEnd();
 		}
 		glLineWidth(1);
-//		this->renderBoundingBox(this->mSelectedBrush->mMins, this->mSelectedBrush->mMaxs, bb);
-		glDisable(GL_DEPTH_TEST);
 		glColor4f(1.0f, 1.0f, 1.0f, 0.9f);
 		glLineWidth(1);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -121,15 +118,6 @@ void MapViewer::onIdle(const GameTime* time)
 	}
 	glPopMatrix();
 	
-	glDisable(GL_DEPTH_TEST);
-	int x = 0;
-	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
-	{
-		glViewport(0, this->height()-70-x*50, this->width()/10, this->height()/10);
-		(*itr)->renderMinitature((*itr) == this->mSelectedTool);
-		x++;
-	}
-	
 	glViewport(0, 0, this->width(), this->height());
 
 	GLint viewport[4];
@@ -146,6 +134,8 @@ void MapViewer::onIdle(const GameTime* time)
 	glLoadIdentity();
 
 	this->mStatus.render(time->getTotalTime());
+	if (this->mSelectedTool != 0)
+		this->mSelectedTool->render2D(time->getTotalTime());
 	
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
