@@ -12,7 +12,7 @@
 
 AllInOneTool::AllInOneTool()
 	: Tool("All-in-One tool", Key::B), mHasMoved(false),
-		mSize(70), mHoverType(HoverType::None), mColors(0), mMove(0), mScale(0), mRotate(0), mOpacity(0.6f)
+		mSize(70), mHoverType(0), mColors(0), mMove(0), mScale(0), mRotate(0), mOpacity(0.6f)
 {
 }
 
@@ -195,14 +195,14 @@ bool AllInOneTool::onMouseButtonDown(Mouse::Button button)
 	this->mStartX = this->mPreviousX = MouseState::currentState().getMousePositionX();
 	this->mStartY = this->mPreviousY = MouseState::currentState().getMousePositionY();
 	
-	if (this->mHoverType != HoverType::None)
+	if (this->mHoverType != 0/*HoverType::None*/)
 	{
 		this->mHasMoved = true;
 		this->mHoverType1 = this->mHoverType;
 	}
 	else
 	{
-		this->mHoverType1 = HoverType::None;
+		this->mHoverType1 = 0/*HoverType::None*/;
 		if (button == Mouse::Left)
 			this->mDragging1 = true;
 	}
@@ -212,7 +212,7 @@ bool AllInOneTool::onMouseButtonDown(Mouse::Button button)
 bool AllInOneTool::onMouseButtonUp(Mouse::Button button)
 {
 	this->mDragging1 = false;
-	this->mHoverType1 = HoverType::None;
+	this->mHoverType1 = 0/*HoverType::None*/;
 	
 	if (button == Mouse::Left && (Vector3(this->mStartX, this->mStartY, 0)-Vector3(this->mPreviousX, this->mPreviousY, 0)).length() < 5)
 	{
@@ -267,7 +267,7 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	this->mHasMoved = true;
 	this->testHover(x, y);
 	
-	if (this->mHoverType1 == HoverType::None && MouseState::currentState().isButtonPressed(Mouse::Left))
+	if (this->mHoverType1 == 0/*HoverType::None*/ && MouseState::currentState().isButtonPressed(Mouse::Left))
 	{
 		this->mViewer->mCamera.rotate(Deg2Rad((this->mPreviousY-y)/10.0f), 0, Deg2Rad((x-this->mPreviousX)/10.0f));
 	
@@ -380,7 +380,7 @@ void AllInOneTool::testHover(int mousex, int mousey)
 	else if (pixel[2] >= 200 && pixel[1] == 0 && pixel[0] == 0)
 		this->mHoverType = HoverType::Rotate;
 	else 
-		this->mHoverType = HoverType::None;
+		this->mHoverType = 0/*HoverType::None*/;
 	
 	// Determine opacity
 	Vector3 v(this->mPosition.x()-mousex, this->mPosition.y()-mousey, 0);

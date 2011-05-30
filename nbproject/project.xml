@@ -18,11 +18,11 @@
             <sourceRootList/>
             <confList>
                 <confElem>
-                    <name>Debug</name>
+                    <name>linuxDebug</name>
                     <type>1</type>
                 </confElem>
                 <confElem>
-                    <name>Release</name>
+                    <name>linuxRelease</name>
                     <type>1</type>
                 </confElem>
                 <confElem>

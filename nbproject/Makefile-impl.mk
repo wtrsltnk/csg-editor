@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=MapViewer
 
 # Active Configuration
-DEFAULTCONF=Debug
+DEFAULTCONF=linuxDebug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release win32Debug win32Release 
+ALLCONFS=linuxDebug linuxRelease win32Debug win32Release 
 
 
 # build

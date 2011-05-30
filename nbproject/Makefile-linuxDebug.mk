@@ -22,7 +22,7 @@ AS=as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
-CND_CONF=Debug
+CND_CONF=linuxDebug
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -54,7 +54,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-Wl,-rpath ../Context/Common/dist/linuxDebug/GNU-Linux-x86 -L../Context/Common/dist/linuxDebug/GNU-Linux-x86 -lCommon -Wl,-rpath ../Context/Context/dist/linuxDebug/GNU-Linux-x86 -L../Context/Context/dist/linuxDebug/GNU-Linux-x86 -lContext -Wl,-rpath ../Context/Geometry/dist/Debug/GNU-Linux-x86 -L../Context/Geometry/dist/Debug/GNU-Linux-x86 -lGeometry -lGLU
+LDLIBSOPTIONS=-Wl,-rpath ../Context/Common/dist/linuxDebug/GNU-Linux-x86 -L../Context/Common/dist/linuxDebug/GNU-Linux-x86 -lCommon -Wl,-rpath ../Context/Context/dist/linuxDebug/GNU-Linux-x86 -L../Context/Context/dist/linuxDebug/GNU-Linux-x86 -lContext -Wl,-rpath ../Context/Geometry/dist/linuxDebug/GNU-Linux-x86 -L../Context/Geometry/dist/linuxDebug/GNU-Linux-x86 -lGeometry -lGLU
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -64,7 +64,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../Context/Common/dist/lin
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../Context/Context/dist/linuxDebug/GNU-Linux-x86/libContext.so
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../Context/Geometry/dist/Debug/GNU-Linux-x86/libGeometry.so
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ../Context/Geometry/dist/linuxDebug/GNU-Linux-x86/libGeometry.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapviewer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -94,7 +94,7 @@ ${OBJECTDIR}/Status.o: Status.cpp
 .build-subprojects:
 	cd ../Context/Common && ${MAKE}  -f Makefile CONF=linuxDebug
 	cd ../Context/Context && ${MAKE}  -f Makefile CONF=linuxDebug
-	cd ../Context/Geometry && ${MAKE}  -f Makefile CONF=Debug
+	cd ../Context/Geometry && ${MAKE}  -f Makefile CONF=linuxDebug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -105,7 +105,7 @@ ${OBJECTDIR}/Status.o: Status.cpp
 .clean-subprojects:
 	cd ../Context/Common && ${MAKE}  -f Makefile CONF=linuxDebug clean
 	cd ../Context/Context && ${MAKE}  -f Makefile CONF=linuxDebug clean
-	cd ../Context/Geometry && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../Context/Geometry && ${MAKE}  -f Makefile CONF=linuxDebug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

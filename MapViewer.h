@@ -57,7 +57,7 @@ public:
 	Camera mCamera;
 	std::vector<Tool*> mTools;
 	Tool* mSelectedTool;
-	Status mStatus;
+	StatusView mStatus;
 	bool mMenuFocus;
 
 };

@@ -8,23 +8,23 @@
 #include "Status.h"
 #include <GLee.h>
 
-Status::Status()
+StatusView::StatusView()
 	: mFont(0), mStart(0), mDuration(0), mLastTime(0), mText(0)
 {
 }
 
-Status::~Status()
+StatusView::~StatusView()
 {
 	if (this->mText != 0)
 		delete []this->mText;
 }
 
-bool Status::isStatusVisible()
+bool StatusView::isStatusVisible()
 {
 	return (this->mStart + this->mDuration > this->mLastTime);
 }
 
-void Status::setStatus(const char* text, int duration)
+void StatusView::setStatus(const char* text, int duration)
 {
 	if (this->mText != 0)
 		delete []this->mText;
@@ -34,7 +34,7 @@ void Status::setStatus(const char* text, int duration)
 	this->mDuration = duration;
 }
 
-void Status::render(int time)
+void StatusView::render(int time)
 {
 	if (this->mStart + this->mDuration > time || this->mDuration == -1)
 	{

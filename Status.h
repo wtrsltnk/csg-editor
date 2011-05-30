@@ -10,11 +10,11 @@
 
 #include <uiFont.h>
 
-class Status
+class StatusView
 {
 public:
-	Status();
-	virtual ~Status();
+	StatusView();
+	virtual ~StatusView();
 
 	bool isStatusVisible();
 	void setStatus(const char* text, int duration = 2000);

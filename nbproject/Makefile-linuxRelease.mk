@@ -22,7 +22,7 @@ AS=as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
-CND_CONF=Release
+CND_CONF=linuxRelease
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
