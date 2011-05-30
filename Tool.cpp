@@ -6,7 +6,7 @@
  */
 
 #include "Tool.h"
-#include <GL/freeglut.h>
+#include <GLee.h>
 #include <math.h>
 
 Tool::Tool(const char* title, Key::Code activatorKey)

@@ -6,7 +6,7 @@
  */
 
 #include "Status.h"
-#include <GL/freeglut.h>
+#include <GLee.h>
 
 Status::Status()
 	: mFont(0), mStart(0), mDuration(0), mLastTime(0), mText(0)

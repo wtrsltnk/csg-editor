@@ -14,6 +14,7 @@
 #include <MapLoader.h>
 #include <GameTime.h>
 #include <stdio.h>
+#include <iostream>
 
 int main()
 {
@@ -170,13 +171,13 @@ void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glColor3fv(brush->mColor);
+	glColor3ubv(brush->mColor);
 	Vector3 v = Vector3(0.7, 0.5, -1).unit();
 	for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
 	{
 		glBegin(GL_POLYGON);
-		float add = (v.dotProduct((*p).mNormal.unit())) / 10.0f;
-		glColor3f(brush->mColor[0] + add, brush->mColor[1] + add, brush->mColor[2] + add);
+		float add = (v.dotProduct((*p).mNormal.unit()) * 5);
+		glColor3ub(brush->mColor[0] + add, brush->mColor[1] + add, brush->mColor[2] + add);
 		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
 			glVertex3fv(brush->mVertices[(*itr)]);
 		glEnd();
@@ -202,13 +203,11 @@ geo::Brush* MapViewer::selectBrush(int mousex, int mousey)
 
 	this->mCamera.update();
 
-	float lineColor[] = { -1, 1, 1 };
-	float red[] = { -1, 0, 0 };
 	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
 	{
 		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
 		{
-			glColor3fv((*b)->mColor);
+			glColor3ubv((*b)->mColor);
 			for(std::vector<geo::Plane>::iterator p = (*b)->mPlanes.begin(); p != (*b)->mPlanes.end(); ++p)
 			{
 				glBegin(GL_POLYGON);
@@ -227,7 +226,7 @@ geo::Brush* MapViewer::selectBrush(int mousex, int mousey)
 	{
 		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
 		{
-			if ((*b)->mColor[0] == pixel[0]/255.0f && (*b)->mColor[1] == pixel[1]/255.0f && (*b)->mColor[2] == pixel[2]/255.0f)
+			if ((*b)->mColor[0] == pixel[0] && (*b)->mColor[1] == pixel[1] && (*b)->mColor[2] == pixel[2])
 			{
 				return (*b);
 			}

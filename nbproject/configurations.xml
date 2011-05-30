@@ -84,7 +84,7 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libGeometry.so">
               </makeArtifact>
             </linkerLibProjectItem>
-            <linkerLibLibItem>GLU</linkerLibLibItem>
+            <linkerLibLibItem>glu32</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -127,6 +127,129 @@
             <linkerLibLibItem>GLU</linkerLibLibItem>
             <linkerLibLibItem>GL</linkerLibLibItem>
             <linkerLibLibItem>glut</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
+    <conf name="win32Debug" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>../Context/Context</pElem>
+            <pElem>../Context/Geometry</pElem>
+            <pElem>../Context/Common</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Common"
+                            CT="2"
+                            CN="win32Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../Context/Common"
+                            BC="${MAKE}  -f Makefile CONF=win32Debug"
+                            CC="${MAKE}  -f Makefile CONF=win32Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libCommon.dll">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Context"
+                            CT="2"
+                            CN="win32Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../Context/Context"
+                            BC="${MAKE}  -f Makefile CONF=win32Debug"
+                            CC="${MAKE}  -f Makefile CONF=win32Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libContext.dll">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Geometry"
+                            CT="2"
+                            CN="win32Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../Context/Geometry"
+                            BC="${MAKE}  -f Makefile CONF=win32Debug"
+                            CC="${MAKE}  -f Makefile CONF=win32Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libGeometry.dll">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibLibItem>glu32</linkerLibLibItem>
+            <linkerLibLibItem>opengl32</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
+    <conf name="win32Release" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../GuiProject</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>glu32</linkerLibLibItem>
+            <linkerLibLibItem>opengl32</linkerLibLibItem>
+            <linkerLibLibItem>gdi32</linkerLibLibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Context"
+                            CT="2"
+                            CN="win32Release"
+                            AC="false"
+                            BL="true"
+                            WD="../Context/Context"
+                            BC="${MAKE}  -f Makefile CONF=win32Release"
+                            CC="${MAKE}  -f Makefile CONF=win32Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libContext.dll">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Common"
+                            CT="2"
+                            CN="win32Release"
+                            AC="false"
+                            BL="true"
+                            WD="../Context/Common"
+                            BC="${MAKE}  -f Makefile CONF=win32Release"
+                            CC="${MAKE}  -f Makefile CONF=win32Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libCommon.dll">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../Context/Geometry"
+                            CT="2"
+                            CN="win32Release"
+                            AC="false"
+                            BL="true"
+                            WD="../Context/Geometry"
+                            BC="${MAKE}  -f Makefile CONF=win32Release"
+                            CC="${MAKE}  -f Makefile CONF=win32Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libGeometry.dll">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

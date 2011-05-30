@@ -25,6 +25,14 @@
                     <name>Release</name>
                     <type>1</type>
                 </confElem>
+                <confElem>
+                    <name>win32Debug</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>win32Release</name>
+                    <type>1</type>
+                </confElem>
             </confList>
         </data>
     </configuration>

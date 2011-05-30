@@ -8,7 +8,7 @@
 #include "AllInOneTool.h"
 #include "MapViewer.h"
 #include <TextureLoader.h>
-#include <GL/freeglut.h>
+#include <GLee.h>
 
 AllInOneTool::AllInOneTool()
 	: Tool("All-in-One tool", Key::B), mHasMoved(false),
