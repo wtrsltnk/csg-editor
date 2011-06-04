@@ -162,7 +162,8 @@ void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3ubv(brush->mColor);
-	Vector3 v = Vector3(0.7, 0.5, -1).unit();
+	Vector3 v = Vector3(0.0, 1.0, 0.0).unit();
+	int i = 1;
 	for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
 	{
 		glBegin(GL_POLYGON);
