@@ -10,6 +10,7 @@
 
 #include <UserInput.h>
 #include <Camera.h>
+#include <Scene.h>
 
 class MapViewer;
 
@@ -39,6 +40,8 @@ public:
 	const char* title() const;
 	Key::Code activatorKey() const;
 	
+	geo::Brush* selectBrush(int mousex, int mousey);
+	bool selectHandle(int mousex, int mousey);
 	static void renderGrid(int cellsize, int cellcount, Camera& camera);
 	
 protected:

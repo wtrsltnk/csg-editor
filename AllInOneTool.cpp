@@ -119,7 +119,7 @@ void AllInOneTool::render2D(int time)
 			glEnd();
 
 			glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
-			if (this->mHoverType == HoverType::Scale && this->mViewer->mSelectedPlane == 0)
+			if (this->mHoverType == HoverType::Scale)
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			this->mScale->use();
 			glBegin(GL_QUADS);
@@ -190,44 +190,11 @@ bool AllInOneTool::onMouseButtonUp(Mouse::Button button)
 	
 	if (button == Mouse::Left && (Vector3(this->mStartX, this->mStartY, 0)-Vector3(this->mPreviousX, this->mPreviousY, 0)).length() < 5)
 	{
-//		if (this->mViewer->mSelectedBrush != 0)
-//		{
-//			geo::Plane* plane = this->mViewer->selectPlane(this->mViewer->mSelectedBrush, MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-//			if (plane == 0)
-//			{
-//				// Select Brush here
-//				geo::Brush* b = this->mViewer->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-//				if (b != 0)
-//				{
-//					this->mViewer->mSelectedBrush = b;
-//					this->mViewer->mSelectedPlane = 0;
-//					this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
-//				}
-//			}
-//			else
-//			{
-//				if (this->mViewer->mSelectedPlane == plane)
-//				{
-//					this->mViewer->mSelectedPlane = 0;
-//					this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
-//				}
-//				else
-//				{
-//					this->mViewer->mSelectedPlane = plane;
-//					this->mViewer->mSelectionOrigin = plane->average;
-//				}
-//			}
-//		}
-//		else
+		geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+		if (b != 0)
 		{
-			// Select Brush here
-			geo::Brush* b = this->mViewer->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-			if (b != 0)
-			{
-				this->mViewer->mSelectedBrush = b;
-				this->mViewer->mSelectedPlane = 0;
-				this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
-			}
+			this->mViewer->mSelectedBrush = b;
+			this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
 		}
 	}
 	if (this->mViewer->mSelectedBrush != 0)

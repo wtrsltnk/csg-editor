@@ -16,6 +16,8 @@
     <logicalFolder name="f1" displayName="Tools" projectFiles="true">
       <itemPath>AllInOneTool.cpp</itemPath>
       <itemPath>AllInOneTool.h</itemPath>
+      <itemPath>MorphTool.cpp</itemPath>
+      <itemPath>MorphTool.h</itemPath>
       <itemPath>Tool.cpp</itemPath>
       <itemPath>Tool.h</itemPath>
     </logicalFolder>

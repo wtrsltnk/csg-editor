@@ -43,22 +43,16 @@ public:
 
 	void renderBrush(geo::Brush* brush, float lineColor[]);
 	void renderBoundingBox(const float mins[], const float maxs[], float color[]);
-	geo::Brush* selectBrush(int mousex, int mousey);
-	geo::Plane* selectPlane(geo::Brush* brush, int mousex, int mousey);
-	bool selectHandle(int mousex, int mousey);
-	Tool* testMenu(int mousex, int mousey);
 	bool getScreenPosition(const Vector3& worldPosition, Vector3& screenPosition);
 
 	geo::Scene mScene;
 	geo::Brush* mSelectedBrush;
-	geo::Plane* mSelectedPlane;
 	Vector3 mSelectionOrigin;
 	Vector3 mSelectionProjectedOrigin;
 	Camera mCamera;
 	std::vector<Tool*> mTools;
 	Tool* mSelectedTool;
 	StatusView mStatus;
-	bool mMenuFocus;
 
 };
 

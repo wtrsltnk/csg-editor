@@ -8,6 +8,7 @@
 #include "MapViewer.h"
 #include "Status.h"
 #include "AllInOneTool.h"
+#include "MorphTool.h"
 #include <GLee.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -26,7 +27,7 @@ int main()
 }
 
 MapViewer::MapViewer()
-	: GlContext(), mSelectedBrush(0), mSelectedPlane(0), mSelectedTool(0)
+	: GlContext(), mSelectedBrush(0), mSelectedTool(0)
 {
 }
 
@@ -41,6 +42,7 @@ bool MapViewer::onInitializeGl()
 	loader.load("dust_001.map", &this->mScene);
 	
 	this->mTools.push_back(new AllInOneTool());
+	this->mTools.push_back(new MorphTool());
 
 	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
 		(*itr)->initialize(this);
@@ -92,15 +94,6 @@ void MapViewer::onIdle(const GameTime* time)
 	if (this->mSelectedBrush != 0)
 	{
 		glDisable(GL_DEPTH_TEST);
-		if (this->mSelectedPlane != 0)
-		{
-			glColor4f(0, 0, 1, 0.5f);
-			glBegin(GL_POLYGON);
-			for(std::vector<int>::iterator itr = this->mSelectedPlane->mIndices.begin(); itr != this->mSelectedPlane->mIndices.end(); ++itr)
-				glVertex3fv(this->mSelectedBrush->mVertices[(*itr)]);
-			glEnd();
-		}
-		glLineWidth(1);
 		glColor4f(1.0f, 1.0f, 1.0f, 0.9f);
 		glLineWidth(1);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -113,9 +106,11 @@ void MapViewer::onIdle(const GameTime* time)
 		}
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		this->getScreenPosition(this->mSelectionOrigin, this->mSelectionProjectedOrigin);
-		if (this->mSelectedTool != 0)
-			this->mSelectedTool->render(0);
 	}
+	
+	if (this->mSelectedTool != 0)
+		this->mSelectedTool->render(time->getTotalTime());
+	
 	glPopMatrix();
 	
 	glViewport(0, 0, this->width(), this->height());
@@ -181,146 +176,6 @@ void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 	glEnd();
 }
 
-geo::Brush* MapViewer::selectBrush(int mousex, int mousey)
-{
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	glLoadIdentity();
-	glEnable(GL_DEPTH_TEST);
-
-	this->mCamera.update();
-
-	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
-	{
-		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
-		{
-			glColor3ubv((*b)->mColor);
-			for(std::vector<geo::Plane>::iterator p = (*b)->mPlanes.begin(); p != (*b)->mPlanes.end(); ++p)
-			{
-				glBegin(GL_POLYGON);
-				for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
-					glVertex3fv((*b)->mVertices[(*itr)]);
-				glEnd();
-			}
-		}
-	}
-
-	GLubyte pixel[3];
-	glReadBuffer(GL_BACK);
-	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
-
-	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
-	{
-		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
-		{
-			if ((*b)->mColor[0] == pixel[0] && (*b)->mColor[1] == pixel[1] && (*b)->mColor[2] == pixel[2])
-			{
-				return (*b);
-			}
-		}
-	}
-	return 0;
-}
-
-geo::Plane* MapViewer::selectPlane(geo::Brush* brush, int mousex, int mousey)
-{
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_DEPTH_BUFFER);
-
-	glLoadIdentity();
-
-	this->mCamera.update();
-
-	int index = 1;
-	for (std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
-	{
-		glColor3f(index/255.0f, 0, 0);
-		glBegin(GL_POLYGON);
-		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
-			glVertex3fv(brush->mVertices[(*itr)]);
-		glEnd();
-		index++;
-	}
-	
-	GLubyte pixel[3];
-	glReadBuffer(GL_BACK);
-	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
-
-	if (pixel[0] > 0)
-		return &brush->mPlanes[pixel[0]-1];
-	
-	return 0;
-}
-
-bool MapViewer::selectHandle(int mousex, int mousey)
-{
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_DEPTH_BUFFER);
-
-	glLoadIdentity();
-
-	this->mCamera.update();
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-	if (this->mSelectedTool != 0)
-		this->mSelectedTool->renderHitTest();
-	
-	GLubyte pixel[3];
-	glReadBuffer(GL_BACK);
-	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
-
-	if (pixel[0] == 255 && pixel[1] == 255 && pixel[2] == 255)
-		return true;
-	
-	return false;
-}
-
-Tool* MapViewer::testMenu(int mousex, int mousey)
-{
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_DEPTH_BUFFER);
-
-	glLoadIdentity();
-
-	glDisable(GL_DEPTH_TEST);
-	int x = 0;
-	for (std::vector<Tool*>::iterator itr = this->mTools.begin(); itr != this->mTools.end(); ++itr)
-	{
-		glViewport(0, this->height()-70-x*50, this->width()/10, this->height()/10);
-		glColor3f(x/255.0f, 0, 0);
-		(*itr)->renderHitTestMinitature();
-		x++;
-	}
-	
-	GLubyte pixel[3];
-	glReadBuffer(GL_BACK);
-	glReadPixels(mousex, mousey, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
-
-	glViewport(0, 0, this->width(), this->height());
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	if (pixel[0] == 255 && pixel[1] == 255 && pixel[2] == 255)
-		return 0;
-	
-	return this->mTools[pixel[0]];
-}
-
 bool MapViewer::getScreenPosition(const Vector3& worldPosition, Vector3& screenPosition)
 {
 	GLint viewport[4];
@@ -378,44 +233,19 @@ void MapViewer::onKeyUp(Key::Code key)
 
 void MapViewer::onMouseButtonDown(Mouse::Button button)
 {
-	if (button == Mouse::Left)
-	{
-		Tool* tool = this->testMenu(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
-		if (tool != 0)
-		{
-			if (this->mSelectedTool != 0)
-				this->mSelectedTool->deselect();
-			this->mSelectedTool = tool;
-			this->mSelectedTool->select();
-			this->mMenuFocus = true;
-			return;
-		}
-	}
-		
 	if (this->mSelectedTool != 0)
-		if (this->mSelectedTool->onMouseButtonDown(button) == true)
-			return;
+		this->mSelectedTool->onMouseButtonDown(button);
 }
 
 void MapViewer::onMouseButtonUp(Mouse::Button button)
 {
-	if (this->mSelectedTool != 0 && this->mMenuFocus == false)
+	if (this->mSelectedTool != 0)
 		this->mSelectedTool->onMouseButtonUp(button);
-	this->mMenuFocus = false;
 }
 
 void MapViewer::onMouseMove(int x, int y)
 {
-	if (this->mStatus.isStatusVisible() == false)
-	{
-		Tool* tool = this->testMenu(x, y);
-		if (tool != 0)
-				this->mStatus.setStatus(tool->title(), -1);
-		else
-			this->mStatus.setStatus("", 0);
-	}
-	
-	if (this->mSelectedTool != 0 && this->mMenuFocus == false)
+	if (this->mSelectedTool != 0)
 		this->mSelectedTool->onMouseMove(x, y);
 }
 

@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/Tool.o \
+	${OBJECTDIR}/MorphTool.o \
 	${OBJECTDIR}/AllInOneTool.o \
 	${OBJECTDIR}/MapViewer.o \
 	${OBJECTDIR}/Status.o
@@ -74,6 +75,11 @@ ${OBJECTDIR}/Tool.o: Tool.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/Tool.o Tool.cpp
+
+${OBJECTDIR}/MorphTool.o: MorphTool.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../Context/Context -I../Context/Geometry -I../Context/Common -MMD -MP -MF $@.d -o ${OBJECTDIR}/MorphTool.o MorphTool.cpp
 
 ${OBJECTDIR}/AllInOneTool.o: AllInOneTool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
