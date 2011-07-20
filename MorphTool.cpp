@@ -72,8 +72,8 @@ void MorphTool::render2D(int time)
 bool MorphTool::onMouseButtonDown(Mouse::Button button)
 {
 	this->mHasMoved = false;
-	this->mStartX = this->mPreviousX = MouseState::currentState().getMousePositionX();
-	this->mStartY = this->mPreviousY = MouseState::currentState().getMousePositionY();
+	this->mStartX = this->mPreviousX = MouseState::currentState().x();
+	this->mStartY = this->mPreviousY = MouseState::currentState().y();
 	
 	return true;
 }

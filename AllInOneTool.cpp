@@ -165,8 +165,8 @@ void AllInOneTool::render2D(int time)
 bool AllInOneTool::onMouseButtonDown(Mouse::Button button)
 {
 	this->mHasMoved = false;
-	this->mStartX = this->mPreviousX = MouseState::currentState().getMousePositionX();
-	this->mStartY = this->mPreviousY = MouseState::currentState().getMousePositionY();
+	this->mStartX = this->mPreviousX = MouseState::currentState().x();
+	this->mStartY = this->mPreviousY = MouseState::currentState().y();
 	this->mInitialPosition = this->mViewer->mSelectionOrigin;
 	
 	if (this->mHoverType != 0/*HoverType::None*/)
@@ -190,7 +190,7 @@ bool AllInOneTool::onMouseButtonUp(Mouse::Button button)
 	
 	if (button == Mouse::Left && (Vector3(this->mStartX, this->mStartY, 0)-Vector3(this->mPreviousX, this->mPreviousY, 0)).length() < 5)
 	{
-		geo::Brush* b = this->selectBrush(MouseState::currentState().getMousePositionX(), MouseState::currentState().getMousePositionY());
+		geo::Brush* b = this->selectBrush(MouseState::currentState().x(), MouseState::currentState().y());
 		if (b != 0)
 		{
 			this->mViewer->mSelectedBrush = b;
