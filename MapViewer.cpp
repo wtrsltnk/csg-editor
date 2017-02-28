@@ -68,7 +68,7 @@ void MapViewer::onResize(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(45.0f, aspect, 0.1f, 8000.0f);
+    gluPerspective(45.0f, aspect, 0.1f, 8000.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -104,7 +104,7 @@ void MapViewer::onIdle(const GameTime* time)
 				glVertex3fv(this->mSelectedBrush->mVertices[(*itr)]);
 			glEnd();
 		}
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT, GL_FILL);
 		this->getScreenPosition(this->mSelectionOrigin, this->mSelectionProjectedOrigin);
 	}
 	
