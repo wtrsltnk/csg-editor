@@ -7,7 +7,7 @@
 
 #include "Tool.h"
 #include "MapViewer.h"
-#include <GLee.h>
+#include <GL/glextl.h>
 #include <math.h>
 
 Tool::Tool(const char* title, Key::Code activatorKey)
@@ -128,7 +128,6 @@ bool Tool::selectHandle(int mousex, int mousey)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_DEPTH_BUFFER);
 
 	glLoadIdentity();
 

@@ -6,7 +6,7 @@
  */
 
 #include "Status.h"
-#include <GLee.h>
+#include <GL/glextl.h>
 
 StatusView::StatusView()
 	: mFont(0), mStart(0), mDuration(0), mLastTime(0), mText(0)

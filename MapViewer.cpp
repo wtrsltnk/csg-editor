@@ -9,8 +9,7 @@
 #include "Status.h"
 #include "AllInOneTool.h"
 #include "MorphTool.h"
-#include <GLee.h>
-#include <GL/gl.h>
+#include <GL/glextl.h>
 #include <GL/glu.h>
 #include <MapLoader.h>
 #include <GameTime.h>
@@ -49,9 +48,9 @@ bool MapViewer::onInitializeGl()
 	
 	this->mSelectedTool = this->mTools[0];
 	this->mSelectedTool->select();
-	
-	this->mCamera.rotateX(-90 * 3.14159265f / 180.0f);
-	
+
+    this->mCamera.rotate(-90 * 3.14159265f / 180.0f, 0.0f, 0.0f);
+
 	this->mStatus.mFont = new ui::Font();
 	this->mStatus.mFont->initializeFont("Ubuntu-R.ttf");
 	
@@ -85,10 +84,10 @@ void MapViewer::onIdle(const GameTime* time)
 
 	float lineColor[] = { -1, 1, 1, 1.0f };
 	glEnable(GL_DEPTH_TEST);
-	for(std::vector<geo::Entity*>::iterator e = this->mScene.mEntities.begin(); e != this->mScene.mEntities.end(); ++e)
+    for (auto entity : this->mScene.mEntities)
 	{
-		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
-			this->renderBrush(*b, lineColor);
+        for (auto brush : entity->mBrushes)
+            this->renderBrush(brush, lineColor);
 	}
 	
 	if (this->mSelectedBrush != 0)

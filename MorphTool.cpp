@@ -7,7 +7,7 @@
 
 #include "MorphTool.h"
 #include "MapViewer.h"
-#include <GLee.h>
+#include <GL/glextl.h>
 #include <iostream>
 
 using namespace std;
@@ -88,7 +88,7 @@ bool MorphTool::onMouseMove(int x, int y)
 {
 	if (MouseState::currentState().isButtonPressed(Mouse::Left))
 	{
-		this->mViewer->mCamera.rotate(Deg2Rad((this->mPreviousY-y)/10.0f), 0, Deg2Rad((x-this->mPreviousX)/10.0f));
+        this->mViewer->mCamera.rotate(Deg2Rad((this->mPreviousY-y)/10.0f), 0, Deg2Rad((x-this->mPreviousX)/10.0f));
 	
 		this->mPreviousX = x;
 		this->mPreviousY = y;

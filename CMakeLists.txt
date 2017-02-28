@@ -7,11 +7,13 @@ include(win-cpp-deps.cmake/win-cpp-deps.cmake)
 install_dep("https://bitbucket.org/wtrsltnk/bullet3.git")
 install_dep("https://bitbucket.org/wincppdeps/freeglut.git")
 install_dep("https://bitbucket.org/wincppdeps/glm.git")
+install_dep("https://bitbucket.org/wincppdeps/glextloader.git")
 
 find_package(OpenGL REQUIRED)
 find_package(BULLET3 REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(GLM REQUIRED)
+find_package(GLEXTL REQUIRED)
 
 set(CONTEXT_FILES
     ../Context/Common/BoundingVolume.cpp
@@ -19,11 +21,6 @@ set(CONTEXT_FILES
     ../Context/Common/FileLoader.cpp
     ../Context/Common/TextureLoader.cpp
     ../Context/Common/Texture.cpp
-    ../Context/Common/Matrix4x4.cpp
-    ../Context/Common/Vector3.cpp
-    ../Context/Common/Plane.cpp
-    ../Context/Common/Quaternion.cpp
-    ../Context/Common/GLee.c
     ../Context/Common/Tokenizer.cpp
     ../Context/Common/uiFont.cpp
     ../Context/Common/stb_truetype.cpp
@@ -58,6 +55,7 @@ target_include_directories(MapViewer
     PRIVATE ${BULLET3_INCLUDE_DIR}
     PRIVATE ${GLUT_INCLUDE_DIR}
     PRIVATE ${GLM_INCLUDE_DIR}
+    PRIVATE ${GLEXTL_INCLUDE_DIR}
     )
 
 target_compile_features(MapViewer

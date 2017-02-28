@@ -8,7 +8,7 @@
 #include "AllInOneTool.h"
 #include "MapViewer.h"
 #include <TextureLoader.h>
-#include <GLee.h>
+#include <GL/glextl.h>
 #include <iostream>
 
 AllInOneTool::Config AllInOneTool::sConfig;
@@ -57,9 +57,9 @@ void AllInOneTool::prerender(int time)
 	lastTime = time;
 
 	if (KeyboardState::currentState().isKeyPressed(Key::W))
-		this->mViewer->mCamera.moveForward(speed);
+        this->mViewer->mCamera.moveForward(speed);
 	if (KeyboardState::currentState().isKeyPressed(Key::S))
-		this->mViewer->mCamera.moveForward(-speed);
+        this->mViewer->mCamera.moveForward(-speed);
 	if (KeyboardState::currentState().isKeyPressed(Key::A))
 		this->mViewer->mCamera.moveLeft(speed);
 	if (KeyboardState::currentState().isKeyPressed(Key::D))
@@ -213,7 +213,7 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	
 	if (this->mHoverType1 == 0/*HoverType::None*/ && MouseState::currentState().isButtonPressed(Mouse::Left))
 	{
-		this->mViewer->mCamera.rotate(Deg2Rad((this->mPreviousY-y)/10.0f), 0, Deg2Rad((x-this->mPreviousX)/10.0f));
+        this->mViewer->mCamera.rotate(Deg2Rad((this->mPreviousY-y)/10.0f), 0, Deg2Rad((x-this->mPreviousX)/10.0f));
 	
 		this->mPreviousX = x;
 		this->mPreviousY = y;
