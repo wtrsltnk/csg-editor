@@ -55,11 +55,9 @@ void MorphTool::render(int time)
 	if (this->mViewer->mSelectedBrush != 0)
 	{
 		glBegin(GL_POLYGON);
-		for(std::vector<Vector3>::iterator p = this->mViewer->mSelectedBrush->mVertices.begin(); 
-				p != this->mViewer->mSelectedBrush->mVertices.end(); 
-				++p)
+        for(auto vertex : this->mViewer->mSelectedBrush->mVertices)
 		{
-			this->renderBox((*p).x(), (*p).y(), (*p).z(), 2.0f);
+            this->renderBox(vertex.x, vertex.y, vertex.z, 2.0f);
 		}
 		glEnd();
 	}

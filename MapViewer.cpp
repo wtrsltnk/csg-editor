@@ -100,8 +100,8 @@ void MapViewer::onIdle(const GameTime* time)
 		for(std::vector<geo::Plane>::iterator p = this->mSelectedBrush->mPlanes.begin(); p != this->mSelectedBrush->mPlanes.end(); ++p)
 		{
 			glBegin(GL_POLYGON);
-			for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
-				glVertex3fv(this->mSelectedBrush->mVertices[(*itr)]);
+            for(auto index : (*p).mIndices)
+                glVertex3fv(&(this->mSelectedBrush->mVertices[index][0]));
 			glEnd();
 		}
         glPolygonMode(GL_FRONT, GL_FILL);
@@ -149,34 +149,35 @@ void MapViewer::renderBrush(geo::Brush* brush, float lineColor[])
 		for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
 		{
 			glBegin(GL_POLYGON);
-			for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
-				glVertex3fv(brush->mVertices[(*itr)]);
+            for(auto index : (*p).mIndices)
+                glVertex3fv(&(brush->mVertices[index][0]));
 			glEnd();
 		}
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3ubv(brush->mColor);
-	Vector3 v = Vector3(0.0, 1.0, 0.0).unit();
+    auto v = glm::normalize(glm::vec3(0.0, 1.0, 0.0));
 	int i = 1;
 	for(std::vector<geo::Plane>::iterator p = brush->mPlanes.begin(); p != brush->mPlanes.end(); ++p)
 	{
 		glBegin(GL_POLYGON);
-		float add = (v.dotProduct((*p).mNormal.unit()) * 5);
+        glm::vec3 n = glm::normalize((*p).mNormal);
+        float add = (glm::dot(v, n) * 5.0f);
 		glColor3ub(brush->mColor[0] + add, brush->mColor[1] + add, brush->mColor[2] + add);
-		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
-			glVertex3fv(brush->mVertices[(*itr)]);
+        for(auto index : (*p).mIndices)
+            glVertex3fv(&(brush->mVertices[index][0]));
 		glEnd();
 	}
 
 	glColor3f(1,0,0);
 	glBegin(GL_POINTS);
-	for(std::vector<Vector3>::iterator itr = brush->mVertices.begin(); itr != brush->mVertices.end(); ++itr)
-		glVertex3fv((*itr));
+    for (auto vertex : brush->mVertices)
+        glVertex3fv(&(vertex[0]));
 	glEnd();
 }
 
-bool MapViewer::getScreenPosition(const Vector3& worldPosition, Vector3& screenPosition)
+bool MapViewer::getScreenPosition(const glm::vec3& worldPosition, glm::vec3& screenPosition)
 {
 	GLint viewport[4];
 	GLdouble modelview[16];
@@ -188,14 +189,14 @@ bool MapViewer::getScreenPosition(const Vector3& worldPosition, Vector3& screenP
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
 	gluProject(
-			worldPosition.x(), worldPosition.y(), worldPosition.z(),
+            worldPosition.x, worldPosition.y, worldPosition.z,
 			modelview, projection, viewport, 
 			(GLdouble*)&winX, (GLdouble*)&winY, (GLdouble*)&winZ
 		);
 	
-	screenPosition.x(winX);
-	screenPosition.y(winY);
-	screenPosition.z(winZ);
+    screenPosition.x = winX;
+    screenPosition.y = winY;
+    screenPosition.z = winZ;
 	
 	return true;
 }

@@ -6,10 +6,12 @@ include(win-cpp-deps.cmake/win-cpp-deps.cmake)
 
 install_dep("https://bitbucket.org/wtrsltnk/bullet3.git")
 install_dep("https://bitbucket.org/wincppdeps/freeglut.git")
+install_dep("https://bitbucket.org/wincppdeps/glm.git")
 
 find_package(OpenGL REQUIRED)
 find_package(BULLET3 REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLM REQUIRED)
 
 set(CONTEXT_FILES
     ../Context/Common/BoundingVolume.cpp
@@ -50,11 +52,12 @@ set(FILES
 add_executable(MapViewer ${FILES} ${CONTEXT_FILES})
 
 target_include_directories(MapViewer
-	PRIVATE ../Context/Common
-	PRIVATE ../Context/Context
-	PRIVATE ../Context/Geometry
-	PRIVATE ${BULLET3_INCLUDE_DIR}
+    PRIVATE ../Context/Common
+    PRIVATE ../Context/Context
+    PRIVATE ../Context/Geometry
+    PRIVATE ${BULLET3_INCLUDE_DIR}
     PRIVATE ${GLUT_INCLUDE_DIR}
+    PRIVATE ${GLM_INCLUDE_DIR}
     )
 
 target_compile_features(MapViewer

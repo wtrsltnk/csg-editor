@@ -72,9 +72,9 @@ void AllInOneTool::render(int time)
 	{
 		glPushMatrix();
 		glTranslatef(
-				this->mInitialPosition.x(), 
-				this->mInitialPosition.y(), 
-				this->mInitialPosition.z()
+                this->mInitialPosition.x,
+                this->mInitialPosition.y,
+                this->mInitialPosition.z
 				);
 		Tool::renderGrid(32, 20, this->mViewer->mCamera);
 		glPopMatrix();
@@ -85,7 +85,7 @@ void AllInOneTool::render2D(int time)
 {
 	if (this->mViewer->mSelectedBrush != 0)
 	{
-		if (this->mViewer->mSelectionProjectedOrigin.z() < 1.0f)
+        if (this->mViewer->mSelectionProjectedOrigin.z < 1.0f)
 		{
 			GLint viewport[4];
 			glGetIntegerv(GL_VIEWPORT, viewport);
@@ -106,7 +106,7 @@ void AllInOneTool::render2D(int time)
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glDisable(GL_DEPTH_TEST);
 			glPushMatrix();
-			glTranslatef(this->mPosition.x(), this->mPosition.y(), 5);
+            glTranslatef(this->mPosition.x, this->mPosition.y, 5.0f);
 
 			glColor4f(1.0f, 1.0f, 1.0f, this->mOpacity);
 
@@ -188,13 +188,14 @@ bool AllInOneTool::onMouseButtonUp(Mouse::Button button)
 	this->mDragging1 = false; 
 	this->mHoverType1 = 0/*HoverType::None*/;
 	
-	if (button == Mouse::Left && (Vector3(this->mStartX, this->mStartY, 0)-Vector3(this->mPreviousX, this->mPreviousY, 0)).length() < 5)
+    if (button == Mouse::Left && glm::length(glm::vec3(this->mStartX, this->mStartY, 0)-glm::vec3(this->mPreviousX, this->mPreviousY, 0)) < 5)
 	{
 		geo::Brush* b = this->selectBrush(MouseState::currentState().x(), MouseState::currentState().y());
 		if (b != 0)
 		{
 			this->mViewer->mSelectedBrush = b;
-			this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+            auto o = this->mViewer->mSelectedBrush->origin();
+            this->mViewer->mSelectionOrigin = glm::vec3(o.x, o.y, o.z);
 		}
 	}
 	if (this->mViewer->mSelectedBrush != 0)
@@ -219,29 +220,30 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	}
 	else if (this->mHoverType1 == HoverType::Move)
 	{
-		Vector3 left = Vector3(x-this->mPreviousX, 0, 0);//this->mViewer->mCamera.left().unit() * (x-mPreviousX);
-		Vector3 up = Vector3(0, y-this->mPreviousY, 0);//this->mViewer->mCamera.up().unit() * (y-mPreviousY);
+        glm::vec3 left = glm::vec3(x-this->mPreviousX, 0, 0);//this->mViewer->mCamera.left().unit() * (x-mPreviousX);
+        glm::vec3 up = glm::vec3(0, y-this->mPreviousY, 0);//this->mViewer->mCamera.up().unit() * (y-mPreviousY);
 		
 		if (AllInOneTool::sConfig.mUseGrid == false)
 		{
-			left = this->mViewer->mCamera.left().unit() * (x-mPreviousX);
-			up = this->mViewer->mCamera.up().unit() * (y-mPreviousY);
+            left = glm::normalize(this->mViewer->mCamera.left()) * float(x-mPreviousX);
+            up = glm::normalize(this->mViewer->mCamera.up()) * float(y-mPreviousY);
 		}
-		else if (fabs(this->mViewer->mCamera.forward().x()) > fabs(mViewer->mCamera.forward().z()) && 
-				fabs(mViewer->mCamera.forward().x()) > fabs(mViewer->mCamera.forward().y()))
+        else if (fabs(this->mViewer->mCamera.forward().x) > fabs(mViewer->mCamera.forward().z) &&
+                fabs(mViewer->mCamera.forward().x) > fabs(mViewer->mCamera.forward().y))
 		{
-			left = Vector3(0, this->mPreviousX-x, 0);
-			up = Vector3(0, 0, y-this->mPreviousY);
+            left = glm::vec3(0, this->mPreviousX-x, 0);
+            up = glm::vec3(0, 0, y-this->mPreviousY);
 		}
-		else if (fabs(mViewer->mCamera.forward().y()) > fabs(mViewer->mCamera.forward().z()) && 
-				fabs(mViewer->mCamera.forward().y()) > fabs(mViewer->mCamera.forward().x()))
+        else if (fabs(mViewer->mCamera.forward().y) > fabs(mViewer->mCamera.forward().z) &&
+                fabs(mViewer->mCamera.forward().y) > fabs(mViewer->mCamera.forward().x))
 		{
-			left = Vector3(x-this->mPreviousX, 0, 0);
-			up = Vector3(0, 0, y-this->mPreviousY);
+            left = glm::vec3(x-this->mPreviousX, 0, 0);
+            up = glm::vec3(0, 0, y-this->mPreviousY);
 		}
-		this->mViewer->mSelectedBrush->move(left.x(), left.y(), left.z());
-		this->mViewer->mSelectedBrush->move(up.x(), up.y(), up.z());
-		this->mViewer->mSelectionOrigin = this->mViewer->mSelectedBrush->origin();
+        this->mViewer->mSelectedBrush->move(left.x, left.y, left.z);
+        this->mViewer->mSelectedBrush->move(up.x, up.y, up.z);
+        auto o = this->mViewer->mSelectedBrush->origin();
+        this->mViewer->mSelectionOrigin = glm::vec3(o.x, o.y, o.z);
 		
 		this->mPreviousX = x;
 		this->mPreviousY = y;
@@ -249,7 +251,8 @@ bool AllInOneTool::onMouseMove(int x, int y)
 	else if (this->mHoverType1 == HoverType::Scale)
 	{
 		float scale = (x - this->mPreviousX) / 100.0f;
-		this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, this->mViewer->mSelectionOrigin);
+        auto o = this->mViewer->mSelectionOrigin;
+        this->mViewer->mSelectedBrush->scale(1.0f+scale, 1.0f+scale, 1.0f+scale, o);
 		
 		this->mPreviousX = x;
 		this->mPreviousY = y;
@@ -288,7 +291,7 @@ void AllInOneTool::testHover(int mousex, int mousey)
 
 	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
-	glTranslatef(this->mPosition.x(), this->mPosition.y(), 5);
+    glTranslatef(this->mPosition.x, this->mPosition.y, 5);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
 	this->mColors->use();
@@ -321,7 +324,7 @@ void AllInOneTool::testHover(int mousex, int mousey)
 		this->mHoverType = 0/*HoverType::None*/;
 	
 	// Determine opacity
-	Vector3 v(this->mPosition.x()-mousex, this->mPosition.y()-mousey, 0);
+    glm::vec3 v(this->mPosition.x-mousex, this->mPosition.y-mousey, 0);
 	int x = viewport[2] - viewport[0];
 	int y = viewport[3] - viewport[1];
 	int maxviewport = sqrt(x*x+y*y);

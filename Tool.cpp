@@ -44,15 +44,15 @@ void Tool::renderGrid(int cellsize, int cellcount, Camera& camera)
 {
 	int X = 0, Y = 1, Z = 2;
 
-	if (fabs(camera.forward().x()) > fabs(camera.forward().z()) && 
-			fabs(camera.forward().x()) > fabs(camera.forward().y()))
+    if (fabs(camera.forward().x) > fabs(camera.forward().z) &&
+            fabs(camera.forward().x) > fabs(camera.forward().y))
 	{
 		X = 2;
 		Y = 1;
 		Z = 0;
 	}
-	if (fabs(camera.forward().y()) > fabs(camera.forward().z()) && 
-			fabs(camera.forward().y()) > fabs(camera.forward().x()))
+    if (fabs(camera.forward().y) > fabs(camera.forward().z) &&
+            fabs(camera.forward().y) > fabs(camera.forward().x))
 	{
 		X = 1;
 		Y = 2;
@@ -97,8 +97,8 @@ geo::Brush* Tool::selectBrush(int mousex, int mousey)
 			for(std::vector<geo::Plane>::iterator p = (*b)->mPlanes.begin(); p != (*b)->mPlanes.end(); ++p)
 			{
 				glBegin(GL_POLYGON);
-				for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
-					glVertex3fv((*b)->mVertices[(*itr)]);
+                for (int index : (*p).mIndices)
+                    glVertex3fv(&((*b)->mVertices[index][0]));
 				glEnd();
 			}
 		}

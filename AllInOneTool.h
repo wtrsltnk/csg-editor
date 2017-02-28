@@ -10,6 +10,7 @@
 
 #include "Tool.h"
 #include <Texture.h>
+#include <glm/glm.hpp>
 
 namespace HoverType
 {
@@ -58,9 +59,9 @@ private:
 	int mHoverType1;
 	int mPreviousX, mPreviousY;
 	int mStartX, mStartY;
-	Vector3 mInitialPosition;
+    glm::vec3 mInitialPosition;
 
-	Vector3 mPosition;
+    glm::vec3 mPosition;
 	int mSize;
 	int mHoverType;
 	float mOpacity;

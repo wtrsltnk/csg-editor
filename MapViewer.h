@@ -13,6 +13,7 @@
 #include <GlContext.h>
 #include <Camera.h>
 #include <Scene.h>
+#include <glm/glm.hpp>
 
 namespace EditMode
 {
@@ -43,12 +44,12 @@ public:
 
 	void renderBrush(geo::Brush* brush, float lineColor[]);
 	void renderBoundingBox(const float mins[], const float maxs[], float color[]);
-	bool getScreenPosition(const Vector3& worldPosition, Vector3& screenPosition);
+    bool getScreenPosition(const glm::vec3& worldPosition, glm::vec3& screenPosition);
 
 	geo::Scene mScene;
 	geo::Brush* mSelectedBrush;
-	Vector3 mSelectionOrigin;
-	Vector3 mSelectionProjectedOrigin;
+    glm::vec3 mSelectionOrigin;
+    glm::vec3 mSelectionProjectedOrigin;
 	Camera mCamera;
 	std::vector<Tool*> mTools;
 	Tool* mSelectedTool;
