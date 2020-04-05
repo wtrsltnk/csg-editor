@@ -7,13 +7,11 @@ include(win-cpp-deps.cmake/win-cpp-deps.cmake)
 install_dep("https://bitbucket.org/wtrsltnk/bullet3.git")
 install_dep("https://bitbucket.org/wincppdeps/freeglut.git")
 install_dep("https://bitbucket.org/wincppdeps/glm.git")
-install_dep("https://bitbucket.org/wincppdeps/glextloader.git")
 
 find_package(OpenGL REQUIRED)
 find_package(BULLET3 REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(GLM REQUIRED)
-find_package(GLEXTL REQUIRED)
 
 set(CONTEXT_FILES
     ../Context/Common/BoundingVolume.cpp
@@ -34,6 +32,7 @@ set(CONTEXT_FILES
     )
 
 set(FILES
+    glad.c
     MapViewer.h
     Status.h
     MapViewer.cpp
@@ -55,7 +54,7 @@ target_include_directories(MapViewer
     PRIVATE ${BULLET3_INCLUDE_DIR}
     PRIVATE ${GLUT_INCLUDE_DIR}
     PRIVATE ${GLM_INCLUDE_DIR}
-    PRIVATE ${GLEXTL_INCLUDE_DIR}
+    PRIVATE include
     )
 
 target_compile_features(MapViewer
@@ -64,11 +63,10 @@ target_compile_features(MapViewer
     PRIVATE cxx_range_for
     )
 
+message(STATUS ${OPENGL_LIBRARIES})
+
 target_link_libraries(MapViewer
-    ${OPENGL_LIBRARIES}
     ${BULLET3_LIBRARIES}
     ${GLUT_LIBRARIES}
+    ${OPENGL_LIBRARIES}
     )
-
-#target_compile_definitions(MapViewer
-#    )
